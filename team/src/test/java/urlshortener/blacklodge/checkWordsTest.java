@@ -16,7 +16,11 @@ public class checkWordsTest {
         assertEquals(true,test.check());
     }
 
-
+    @Test
+    public void checkSafeWord() {
+        checkWords test = new checkWords("hi");
+        assertEquals(false,test.check());
+    }
 
     @Test
     public void checkBadURL() {
@@ -24,5 +28,9 @@ public class checkWordsTest {
         assertEquals(true,test.check());
     }
 
-
+    @Test
+    public void checkSafeURL() {
+        checkWords test = new checkWords("https://mydomain.com/hi/test");
+        assertEquals(false,test.check());
+    }
 }

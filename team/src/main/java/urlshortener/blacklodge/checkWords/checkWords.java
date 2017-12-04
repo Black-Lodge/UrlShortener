@@ -15,6 +15,8 @@ public class checkWords {
     }
 
     public boolean check() {
-        return true;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response= restTemplate.getForEntity(URL + query, String.class);
+        return Boolean.valueOf(response.getBody());
     }
 }

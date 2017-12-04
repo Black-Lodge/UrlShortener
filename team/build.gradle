@@ -11,6 +11,7 @@ dependencies {
 
     compile 'org.webjars:bootstrap:3.3.5'
     compile 'org.webjars:jquery:2.1.4'
+    compile 'org.glassfish.tyrus:tyrus-container-grizzly-server:1.13'
 
     // Testing framework
     testCompile 'org.springframework.boot:spring-boot-starter-test'
