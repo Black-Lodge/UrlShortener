@@ -1,8 +1,8 @@
 package urlshortener.blacklodge.web;
 
-import java.util.Iterator;
+
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
+
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -15,11 +15,21 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 
 import urlshortener.blacklodge.metrics.EventSuscriber;
 
-
+/**
+ * Websockets Enpoint for Metrics
+ * 
+ * This endpoint catch the 
+ * new websockets clients to the Metrics Service.
+ * Adding them to a List of EventSuscriber Class that 
+ * periodically send them the new metrics in JSON.  
+ * 
+ * @author Daniel
+ *
+ */
 @ServerEndpoint(value = "/globalinformation")
 public class MetricsServerEndpoint {
 	

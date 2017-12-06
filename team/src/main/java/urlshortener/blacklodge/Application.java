@@ -24,6 +24,7 @@ public class Application extends SpringBootServletInitializer {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
 		
+		//Enable Global Information Metrics 
 		runServerWebsockets();
 	}
 
@@ -32,6 +33,9 @@ public class Application extends SpringBootServletInitializer {
 		return application.sources(Application.class);
 	}
 	
+	/**
+	 * Method that runs the Websockets service for the Metrics Global Information
+	 */
 	private static void runServerWebsockets() {
 		Server server = new Server("localhost", 8025, "/globalinformation", new HashMap<>(),
 				MetricsServerEndpoint.class);
