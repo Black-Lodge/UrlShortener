@@ -14,20 +14,27 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import urlshortener.blacklodge.metrics.EventSuscriber;
 
 
 @ServerEndpoint(value = "/globalinformation")
 public class MetricsServerEndpoint {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpoint.class);
-	CopyOnWriteArrayList<Session> listSessions = new CopyOnWriteArrayList<Session>();
-	EventSuscriber es = new EventSuscriber();
+
+	@Autowired
+	static EventSuscriber es = null;
 	
 	@OnOpen
 	public void onOpen(Session session) {
+		if (es == null) {
+			es = new EventSuscriber(new CopyOnWriteArrayList<Session>());
+		}
 		logger.info("Server Connected ... "+ session.getId());
-		listSessions.add(session);
+		es.addSession(session);
 	}
 	
 	@OnMessage
@@ -38,7 +45,7 @@ public class MetricsServerEndpoint {
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
 		logger.info(String.format("Session %s closed because of %s",session.getId(),closeReason ));
-		listSessions.remove(session);
+		es.removeSession(session);
 	}
 	
 	@OnError
@@ -47,44 +54,5 @@ public class MetricsServerEndpoint {
 				errorReason);
 	}
 	
-	
-	@Component
-	class EventSuscriber implements Runnable{
-		private Thread thread;
-		private volatile boolean someCondition = true;
-		
-		EventSuscriber(){
-			this.thread = new Thread(this);
-			thread.start();
-		}
-		
-		@Override
-		public void run() {
-			while(someCondition) {
-				try {
-					Thread.sleep(2 *   // minutes to sleep
-								60 *  // sconds to a minute
-								1000  // milliseconds to a second
-								);
-					sendMetrics();
-					
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				
-			}
-			
-		}
-		void sendMetrics(){
-			for (Iterator<Session> iterator = listSessions.iterator(); iterator.hasNext();) {
-				Session session = (Session) iterator.next();
-				session.getAsyncRemote().sendText("Han pasado dos minutos.");
-				
-			}
-		}
-	}
 	
 }

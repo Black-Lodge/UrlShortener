@@ -38,7 +38,7 @@ public class Application extends SpringBootServletInitializer {
 
 		try (Scanner s = new Scanner(System.in)) {
 			server.start();
-			logger.info("Press 's' to shutdown now the server...");
+			logger.info("Press 's' to shutdown now the websocketserver...");
 			while (!s.hasNext("s"));
 		} catch (Exception e) {
 			logger.info("Server stopped"+ e.getMessage());
