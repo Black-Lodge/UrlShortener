@@ -5,15 +5,12 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.event.Level;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 import urlshortener.blacklodge.web.MetricsServerEndpoint;
-
-import org.glassfish.grizzly.Grizzly;
 import org.glassfish.tyrus.server.Server;
 
 

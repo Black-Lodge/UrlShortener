@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import urlshortener.blacklodge.metrics.EventSuscriber;
+import urlshortener.blacklodge.metrics.EventSubscriber;
 
 /**
  * Websockets Enpoint for Metrics
@@ -35,14 +35,14 @@ public class MetricsServerEndpoint {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpoint.class);
 
-	@Autowired
-	static EventSuscriber es = null;
+
+	static EventSubscriber es = new EventSubscriber();
+	
+	
+	
 	
 	@OnOpen
 	public void onOpen(Session session) {
-		if (es == null) {
-			es = new EventSuscriber(new CopyOnWriteArrayList<Session>());
-		}
 		logger.info("Server Connected ... "+ session.getId());
 		es.addSession(session);
 	}

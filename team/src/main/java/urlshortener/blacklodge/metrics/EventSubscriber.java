@@ -25,25 +25,33 @@ import urlshortener.blacklodge.web.MetricsServerEndpoint;
  * @author Daniel
  *
  */
-public class EventSuscriber implements Runnable{
+public class EventSubscriber implements Runnable{
 	private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpoint.class);
 	private Thread thread;
 	private volatile boolean someCondition = true;
-	CopyOnWriteArrayList<Session> listSessions = new CopyOnWriteArrayList<Session>();
+	CopyOnWriteArrayList<Session> listSessions ;
 	GlobalInformation gi;
+	int seconds = 120;
 	
-	
-	public EventSuscriber(CopyOnWriteArrayList<Session> listSessions ){
-		this.listSessions = listSessions;
+	public EventSubscriber(){
+		this.listSessions = new CopyOnWriteArrayList<Session>();
 		this.thread = new Thread(this);
 		thread.start();
+		logger.info("EventSubscriber running.");
 	}
-	
+	public EventSubscriber(int time){
+		this.listSessions = new CopyOnWriteArrayList<Session>();
+		this.thread = new Thread(this);
+		thread.start();
+		logger.info("EventSubscriber running.");
+		seconds = time;
+	}
 	/**
 	 * Add the client with Session s in the list of Metrics clients.
 	 * @param s
 	 */
 	public void addSession(Session s) {
+		logger.info("EventSubscriber added Session.");
 		listSessions.add(s);
 	}
 	
@@ -52,21 +60,23 @@ public class EventSuscriber implements Runnable{
 	 * @param s
 	 */
 	public void removeSession(Session s) {
+		logger.info("EventSubscriber removed Session.");
 		listSessions.remove(s);
 	}
 	
 	@Override
 	public void run() {
+		logger.info("Thread run of EventSubscriber running.");
 		while(someCondition) {
 			try {
+				logger.info("Clients connected: "+listSessions.size());
 				if (listSessions.size() >0) {
 					updateMetrics();
 					sendMetrics();
 				}
 				
 				// Tiempo de espera antes de volver a enviar metricas.
-				Thread.sleep(//2 * // minutes to sleep
-							1 *  // sconds to a minute
+				Thread.sleep(seconds *  // seconds to a minute
 							1000  // milliseconds to a second
 							);
 				
@@ -166,7 +176,28 @@ public class EventSuscriber implements Runnable{
 			logger.error("Can't read metrics.uris");
 			uris= 0;
 		}
-	    return new GlobalInformation(time,0,uris,clicks,0,0,used,available);
+		int users;
+		try {
+			users = ((Double) result.get("gauge.users")).intValue();
+		} catch (JSONException e) {
+			logger.error("Can't read metrics.users");
+			users= 0;
+		}
+		int lastPetition;
+		try {
+			lastPetition = ((Double) result.get("gauge.lastPetition")).intValue();
+		} catch (JSONException e) {
+			logger.error("Can't read metrics.lastPetition");
+			lastPetition= 0;
+		}
+		int lastRedirection;
+		try {
+			lastRedirection = ((Double) result.get("gauge.lastRedirection")).intValue();
+		} catch (JSONException e) {
+			logger.error("Can't read metrics.lastRedirection");
+			lastRedirection= 0;
+		}
+	    return new GlobalInformation(time,users,uris,clicks,lastRedirection,lastPetition,used,available);
 	    
 	}
 	/**
