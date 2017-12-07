@@ -18,7 +18,7 @@ public class GlobalInformation {
 	private int lastRedirection;
 	private int lastPetition;
 	private int used;
-	private int avaible;
+	private int available;
 	
 	
 	public GlobalInformation(int time, int users, int uris, int clicks, int lastRedirection, int lastPetition, int used,
@@ -31,7 +31,7 @@ public class GlobalInformation {
 		this.lastRedirection = lastRedirection;
 		this.lastPetition = lastPetition;
 		this.used = used;
-		this.avaible = avaible;
+		this.available = avaible;
 	}
 	
 	
@@ -77,23 +77,22 @@ public class GlobalInformation {
 	public void setUsed(int used) {
 		this.used = used;
 	}
-	public int getAvaible() {
-		return avaible;
+	public int getAvailable() {
+		return available;
 	}
-	public void setAvaible(int avaible) {
-		this.avaible = avaible;
+	public void setAvailable(int available) {
+		this.available = available;
 	}
 	public String getJSON() {
-		String json =
-				"{"
-					+"'time':"+getTime()
-					+",'users':"+getUsers()
-					+",'uris':"+getUris()
-					+",'clicks':"+getClicks()
-					+",'lastRedirection':"+getLastRedirection()
-					+",'lastPetition':"+getLastPetition()
-					+",'used':"+getUsed()
-					+",'avaible':"+getAvaible()
+		String json ="{"
+					+"\"time\":"+getTime()
+					+",\"users\":"+getUsers()
+					+",\"uris\":"+getUris()
+					+",\"clicks\":"+getClicks()
+					+",\"lastRedirection\":"+getLastRedirection()
+					+",\"lastPetition\":"+getLastPetition()
+					+",\"used\":"+getUsed()
+					+",\"avaible\":"+getAvailable()
 					
 				 +"}"
 				;
