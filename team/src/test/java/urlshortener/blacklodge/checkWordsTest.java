@@ -12,25 +12,31 @@ public class checkWordsTest {
 
     @Test
     public void checkBadWord() {
-        checkWords test = new checkWords("fuck");
-        assertEquals(true,test.check());
+        checkWords test = new checkWordsForTesting();
+        assertEquals(true,test.check("fuck"));
     }
 
     @Test
     public void checkSafeWord() {
-        checkWords test = new checkWords("hi");
-        assertEquals(false,test.check());
+        checkWords test = new checkWordsForTesting();
+        assertEquals(false,test.check("you"));
     }
 
     @Test
     public void checkBadURL() {
-        checkWords test = new checkWords("https://mydomain.com/fuck");
-        assertEquals(true,test.check());
+        checkWords test = new checkWordsForTesting();
+        assertEquals(true,test.check("https://mydomain.com/fuck"));
     }
 
     @Test
     public void checkSafeURL() {
-        checkWords test = new checkWords("https://mydomain.com/hi/test");
-        assertEquals(false,test.check());
+        checkWords test = new checkWordsForTesting();
+        assertEquals(false,test.check("https://mydomain.com/hi/test"));
+    }
+
+    private static class checkWordsForTesting implements checkWords {
+        public boolean check(String query) {
+            return query.contains("fuck");
+        }
     }
 }
