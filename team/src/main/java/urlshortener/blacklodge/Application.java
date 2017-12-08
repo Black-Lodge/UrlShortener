@@ -20,33 +20,11 @@ public class Application extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
-		
-		//Enable Global Information Metrics 
-		runServerWebsockets();
 	}
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
-	}
-	
-	/**
-	 * Method that runs the Websockets service for the Metrics Global Information
-	 */
-	private static void runServerWebsockets() {
-		Server server = new Server("localhost", 8025, "/globalinformation", new HashMap<>(),
-				MetricsServerEndpoint.class);
-
-		try (Scanner s = new Scanner(System.in)) {
-			server.start();
-			logger.info("Press 's' to shutdown now the websocketserver...");
-			while (!s.hasNext("s"));
-		} catch (Exception e) {
-			logger.info("Server stopped"+ e.getMessage());
-		} finally {
-			server.stop();
-			logger.info("Server stopped");
-		}
 	}
 
 }
