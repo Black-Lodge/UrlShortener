@@ -4,9 +4,14 @@ eclipse {
    }
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
     compile project(':common')
-
+    
+	
     runtime 'org.hsqldb:hsqldb'
 
     compile 'org.webjars:bootstrap:3.3.5'
@@ -16,6 +21,12 @@ dependencies {
     // Google Safa Browsings
     compile 'com.google.apis:google-api-services-safebrowsing:v4-rev37-1.23.0'
 
+    //Metrics
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    //Metrics - WebSockets
+	compile 'org.glassfish.tyrus:tyrus-container-grizzly-server:1.13'
+	compile 'org.json:json:20141113'
+	
     // Testing framework
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.apache.httpcomponents:httpclient'
