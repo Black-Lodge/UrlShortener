@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.services.SafeBrowsingService;
 
+/**
+ * Logic Model for unique Url shortening
+ *
+ */
 @Component
 public class UrlShortenerModelImpl implements UrlShortenerModel {
     

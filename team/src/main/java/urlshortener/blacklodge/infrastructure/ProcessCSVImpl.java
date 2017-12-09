@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Process CSV multipartfile
+ *
+ */
 @Component
 public class ProcessCSVImpl implements ProcessCSV {
     
@@ -22,14 +26,13 @@ public class ProcessCSVImpl implements ProcessCSV {
         List<String> urls = new ArrayList<String>();
         
         try {
+            // Get an InputStream to read the contents of the file from.
             InputStream is = file.getInputStream();
             Scanner s = new Scanner(is);
             while (s.hasNext()) {
                 urls.add(s.next());
             }
-            
-            
-            
+                      
             s.close();
             is.close();
             return urls;

@@ -9,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import urlshortener.blacklodge.infrastructure.ProcessCSV;
 
+/**
+ * Logic Model for uploaded CSV file processing
+ *
+ */
 @Component
 public class CsvUploadModelImpl implements CsvUploadModel {
     
@@ -19,8 +23,9 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     UrlShortenerModel urlShortenerModel;
     
     public List<String> csvUpload(MultipartFile file) {
-        List<String> urls = processCSV.processCSV(file);
         
+        List<String> urls = processCSV.processCSV(file);
+
         List<String> urlsShortened = new ArrayList<String>();
         
         for (int i = 0; i < urls.size(); i++) {
