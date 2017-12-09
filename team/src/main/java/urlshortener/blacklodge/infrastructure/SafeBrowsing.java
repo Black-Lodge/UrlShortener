@@ -1,4 +1,4 @@
-package urlshortener.blacklodge.services;
+package urlshortener.blacklodge.infrastructure;
 
 public interface SafeBrowsing {
 
