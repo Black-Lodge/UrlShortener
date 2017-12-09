@@ -25,9 +25,10 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     //Metrics - WebSockets
     compile 'org.springframework.boot:spring-boot-starter-websocket'
-    compile 'org.springframework:spring-messaging'
-	compile 'org.glassfish.tyrus:tyrus-container-grizzly-server:1.13'
+    compile 'org.springframework:spring-websocket:4.2.4.RELEASE'
+    compile 'org.springframework:spring-messaging:4.2.4.RELEASE'
 	compile 'org.json:json:20141113'
+	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
 	
     // Testing framework
     testCompile 'org.springframework.boot:spring-boot-starter-test'

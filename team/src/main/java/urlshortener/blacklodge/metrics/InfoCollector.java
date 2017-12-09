@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
 
-import urlshortener.blacklodge.web.MetricsServerEndpoint;
+
 
 
 /**
@@ -19,7 +19,7 @@ import urlshortener.blacklodge.web.MetricsServerEndpoint;
  *
  */
 public class InfoCollector {
-	private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpoint.class);
+	private static final Logger logger = LoggerFactory.getLogger(InfoCollector.class);
 	
 	/**
 	 * Method that returns fake stats of the system.
