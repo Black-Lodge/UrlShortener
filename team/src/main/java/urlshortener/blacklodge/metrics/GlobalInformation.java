@@ -83,7 +83,7 @@ public class GlobalInformation {
 	public void setAvailable(int available) {
 		this.available = available;
 	}
-	/*public String getJSON() {
+	public String getJSON() {
 		String json ="{"
 					+"\"time\":"+getTime()
 					+",\"users\":"+getUsers()
@@ -98,5 +98,5 @@ public class GlobalInformation {
 				;
 		
 		return json;
-	}*/
+	}
 }

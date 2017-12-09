@@ -1,6 +1,7 @@
 package urlshortener.blacklodge.web;
 
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -15,10 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
@@ -28,11 +26,10 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.server.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,11 +42,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.messaging.simp.stomp.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
@@ -60,19 +53,13 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import urlshortener.blacklodge.Application;
+import urlshortener.blacklodge.metrics.InfoCollector;
+
 import java.lang.reflect.Type;
 
-
-
-
-
-
-
-
-
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= DEFINED_PORT)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.DEFINED_PORT, classes = Application.class)
 @DirtiesContext
 public class MetricsServerEndpointTest {
 		private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpointTest.class);
@@ -80,8 +67,8 @@ public class MetricsServerEndpointTest {
 		@Autowired
 		private TestRestTemplate restTemplate;
 		
-		static final String WEBSOCKET_URI = "http://localhost:8080/websocket";
-	    static final String WEBSOCKET_TOPIC = "/topic";
+		final String WEBSOCKET_URI = "http://localhost:8080/websockets";
+	    static final String WEBSOCKET_TOPIC = "/topic/test";
 
 
 	    BlockingQueue<String> blockingQueue;
@@ -90,8 +77,8 @@ public class MetricsServerEndpointTest {
 	    @Before
 	    public void setup() {
 	        blockingQueue = new LinkedBlockingDeque<>();
-	        List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
-	        stompClient = new WebSocketStompClient(new SockJsClient(transports));
+	        stompClient = new WebSocketStompClient(new SockJsClient(asList(
+	                                                    new WebSocketTransport(new StandardWebSocketClient()))));
 	    }
 
 	   
@@ -152,17 +139,12 @@ public class MetricsServerEndpointTest {
 		}
 		
 		@Test(timeout = 150000)
-		public void testWebsocket() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		  
-		  ListenableFuture<StompSession> sese = stompClient.connect(WEBSOCKET_URI, new MyHandler(), "localhost",8080);
-		  StompSession stompsession = null;
-		   try {stompsession = sese.get();} catch (ExecutionException e) {}
-		  assertTrue(stompsession!=null);
-		  
-		  stompsession.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
-		  String message = "MESSAGE TEST";
-		  stompsession.send(WEBSOCKET_TOPIC, message.getBytes());
-		  assertEquals(message, blockingQueue.poll(1, SECONDS));
+		public void testWebsocket() throws InterruptedException, TimeoutException, ExecutionException {
+
+	        StompSession session = stompClient.connect(WEBSOCKET_URI, new StompSessionHandlerAdapter() {})
+                                              .get(1,SECONDS);
+	        session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
+            Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
 		}
 		
 		
