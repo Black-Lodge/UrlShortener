@@ -8,10 +8,10 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+@Component
 public class ProcessCSVImpl implements ProcessCSV {
     
     private final static Logger LOGGER = LoggerFactory.getLogger(ProcessCSVImpl.class);
