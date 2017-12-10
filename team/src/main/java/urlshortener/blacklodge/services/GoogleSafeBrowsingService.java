@@ -14,16 +14,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
-
 /**
  * Wrapper for Google's safe browsing lookup API.
  *
  * 
  */
 @Service
-public class GoogleSafeBrowsing implements SafeBrowsing {
+public class GoogleSafeBrowsingService implements SafeBrowsingService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GoogleSafeBrowsing.class);
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(GoogleSafeBrowsingService.class);
     
     @Value("${GSB.api_key}")
     private String API_KEY;
@@ -36,7 +36,7 @@ public class GoogleSafeBrowsing implements SafeBrowsing {
      * @return true if the URL is trusted; otherwise false.
      */
     @Override
-    public boolean lookupURL(String url) {
+    public boolean checkSafetyUrl(String url) {
         
         FindThreatMatchesRequest findThreatMatchesRequest = new FindThreatMatchesRequest();
         
@@ -76,6 +76,7 @@ public class GoogleSafeBrowsing implements SafeBrowsing {
 
         } catch (Exception e) {
             LOGGER.error("LookUp failed for url {}. Error: {}", url, e.getMessage());
+            // TODO: Quiza lanzar una excepcion para que nuestro servicio entre en modo 404.
             return false;
         }
     
