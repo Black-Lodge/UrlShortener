@@ -1,22 +1,22 @@
 package urlshortener.blacklodge.web;
 
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.concurrent.*;
 
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
@@ -26,11 +26,10 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.server.Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,47 +42,51 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.stomp.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import urlshortener.blacklodge.Application;
+import urlshortener.blacklodge.metrics.InfoCollector;
 
-import urlshortener.blacklodge.metrics.EventSubscriber;
-
-
-
-
-
-
-
-
+import java.lang.reflect.Type;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= DEFINED_PORT)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @DirtiesContext
 public class MetricsServerEndpointTest {
 		private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpointTest.class);
-
-		private Server server;
-
+		
 		@Autowired
 		private TestRestTemplate restTemplate;
 		
-		
 		@LocalServerPort
-		private int port;
+	    private int port;
 		
-		@Before
-		public void setup() throws DeploymentException {
-			server = new Server("localhost", 8025, "/globalinformation", new HashMap<String, Object>(), MetricsServerEndpoint.class);
-			server.start();
-		}
+	    static final String WEBSOCKET_TOPIC = "/topic/test";
 
-		
-		
+
+	    BlockingQueue<String> blockingQueue;
+	    WebSocketStompClient stompClient;
+
+	    @Before
+	    public void setup() {
+	        blockingQueue = new LinkedBlockingDeque<>();
+	        stompClient = new WebSocketStompClient(new SockJsClient(asList(
+	                                                    new WebSocketTransport(new StandardWebSocketClient()))));
+	    }
+
+	   
 		@Test(timeout = 120000)
 		public void testGetMetrics() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		   ResponseEntity<String> entity = restTemplate.getForEntity("/metrics", String.class);
+		   ResponseEntity<String> entity = restTemplate. getForEntity("/metrics", String.class);
 		   String json = entity.getBody();
 		   assertTrue(json.length()>0);
 		}
@@ -138,57 +141,15 @@ public class MetricsServerEndpointTest {
 		}
 		
 		@Test(timeout = 150000)
-		public void testWebsocket() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		   postLink("http://example.com/");
-		  
-		   ResponseEntity<String> entity = restTemplate.getForEntity("/metrics", String.class);
-		   String json = entity.getBody();
-		    JSONObject p = null;
-			try {
-				p = new JSONObject(json);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		    assertTrue(p!= null);
-		    int uris = 0;
-		    try {
-				uris = p.getInt("gauge.uris");
-			} catch (JSONException e) {
-				
-			}
-		    
-		   assertTrue(uris == 1);
-		
-		List<String> list = new ArrayList<>();
-		ClientEndpointConfig configuration = ClientEndpointConfig.Builder.create().build();
-		ClientManager client = ClientManager.createClient();
-		client.connectToServer(new MetricsEndpoint(list), configuration, new URI("ws://localhost:8025/globalinformation/globalinformation"));
-		synchronized (list) {list.wait();}
-		
-		 json = list.get(0);
-		 p = null;
-			try {
-				p = new JSONObject(json);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		  assertTrue(p!= null);
-		  uris = 0;
-		    try {
-				uris = p.getInt("uris");
-			} catch (JSONException e) {
-				
-			}
-		   assertTrue(uris == 1);
-		  
+		public void testWebsocket() throws InterruptedException, TimeoutException, ExecutionException {
+
+	        StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+                                              .get(10,SECONDS);
+	        session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
+            Assert.assertEquals("hi",blockingQueue.poll(10,SECONDS));
 		}
 		
-		@After
-		public void close() {
-			server.stop();
-		}
+		
 		
 		private ResponseEntity<String> postLink(String url) {
 			MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
@@ -196,29 +157,24 @@ public class MetricsServerEndpointTest {
 			return restTemplate.postForEntity("/link", parts, String.class);
 		}
 		
-		 private static class MetricsEndpoint extends Endpoint {
-
-		        private final List<String> list;
-
-		        MetricsEndpoint(List<String> list) {
-		            this.list = list;
+	
+		 
+		 private class MyHandler extends StompSessionHandlerAdapter {
+			 	
+		        public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
+		            logger.info("Now connected");
+		        }
+		        
+		}
+		 class DefaultStompFrameHandler implements StompFrameHandler {
+		        @Override
+		        public Type getPayloadType(StompHeaders stompHeaders) {
+		            return byte[].class;
 		        }
 
 		        @Override
-		        public void onOpen(Session session, EndpointConfig config) {
-
-		            session.addMessageHandler(new MetricsMessageHandler());
-		           
-		        }
-
-		        private class MetricsMessageHandler implements MessageHandler.Whole<String> {
-
-		            @Override
-		            public void onMessage(String message) {
-		            	logger.debug("Test client gets message");
-		                list.add(message);
-		                synchronized (list) {list.notifyAll();} 
-		            }
+		        public void handleFrame(StompHeaders stompHeaders, Object o) {
+		            blockingQueue.offer(new String((byte[]) o));
 		        }
 		    }
 }
