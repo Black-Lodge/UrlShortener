@@ -3,6 +3,7 @@ package urlshortener.blacklodge.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import urlshortener.blacklodge.services.CheckWordsService;
 import urlshortener.blacklodge.services.SafeBrowsingService;
 
 /**
@@ -18,8 +19,8 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     @Autowired
     SafeBrowsingService safeBrowsingService;
     
-    //@Autowired
-    //CheckWordsService checkWordsService;
+    @Autowired
+    CheckWordsService checkWordsService;
     
     //@Autowired
     //HashGeneratorService hashGeneratorService;

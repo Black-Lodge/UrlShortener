@@ -1,4 +1,4 @@
-package urlshortener.blacklodge.infrastructure;
+package urlshortener.blacklodge.services;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -11,8 +11,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -20,10 +19,11 @@ import org.springframework.stereotype.Component;
  *
  * 
  */
-@Component("GoogleSafeBrowsing")
-public class GoogleSafeBrowsing implements SafeBrowsing {
+@Service
+public class GoogleSafeBrowsingService implements SafeBrowsingService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GoogleSafeBrowsing.class);
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(GoogleSafeBrowsingService.class);
     
     @Value("${GSB.api_key}")
     private String API_KEY;
@@ -36,7 +36,7 @@ public class GoogleSafeBrowsing implements SafeBrowsing {
      * @return true if the URL is trusted; otherwise false.
      */
     @Override
-    public boolean lookupURL(String url) {
+    public boolean checkSafetyUrl(String url) {
         
         FindThreatMatchesRequest findThreatMatchesRequest = new FindThreatMatchesRequest();
         
