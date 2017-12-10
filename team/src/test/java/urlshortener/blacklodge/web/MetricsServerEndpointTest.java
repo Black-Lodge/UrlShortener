@@ -59,7 +59,7 @@ import urlshortener.blacklodge.metrics.InfoCollector;
 import java.lang.reflect.Type;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.DEFINED_PORT, classes = Application.class)
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @DirtiesContext
 public class MetricsServerEndpointTest {
 		private static final Logger logger = LoggerFactory.getLogger(MetricsServerEndpointTest.class);
@@ -67,7 +67,9 @@ public class MetricsServerEndpointTest {
 		@Autowired
 		private TestRestTemplate restTemplate;
 		
-		final String WEBSOCKET_URI = "http://localhost:8080/websockets";
+		@LocalServerPort
+	    private int port;
+		
 	    static final String WEBSOCKET_TOPIC = "/topic/test";
 
 
@@ -84,7 +86,7 @@ public class MetricsServerEndpointTest {
 	   
 		@Test(timeout = 120000)
 		public void testGetMetrics() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		   ResponseEntity<String> entity = restTemplate.getForEntity("/metrics", String.class);
+		   ResponseEntity<String> entity = restTemplate. getForEntity("/metrics", String.class);
 		   String json = entity.getBody();
 		   assertTrue(json.length()>0);
 		}
@@ -141,10 +143,10 @@ public class MetricsServerEndpointTest {
 		@Test(timeout = 150000)
 		public void testWebsocket() throws InterruptedException, TimeoutException, ExecutionException {
 
-	        StompSession session = stompClient.connect(WEBSOCKET_URI, new StompSessionHandlerAdapter() {})
-                                              .get(1,SECONDS);
+	        StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+                                              .get(10,SECONDS);
 	        session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
-            Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
+            Assert.assertEquals("hi",blockingQueue.poll(10,SECONDS));
 		}
 		
 		
