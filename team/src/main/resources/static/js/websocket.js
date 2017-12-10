@@ -1,8 +1,10 @@
 var ws = null;
+google.charts.load('current', {'packages':['corechart']});
+//google.charts.setOnLoadCallback(drawChart);
 function WebSocketTest(){
-
+	
   if (ws == null){
-
+	  
 
   if ("WebSocket" in window){
     
@@ -58,8 +60,7 @@ function WebSocketTest(){
 
 var arrayMemmory = [  ['Time',  'Used', 'Available']];
 
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+
 
 function drawChart() {
 	
