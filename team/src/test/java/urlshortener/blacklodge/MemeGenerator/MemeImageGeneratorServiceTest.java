@@ -21,6 +21,8 @@ public class MemeImageGeneratorServiceTest {
     @Test
     public void generateMemeImage() {
         String image_url = memeImageGeneratorService.generateImage("lodge", "black");
-        assertEquals("nada", image_url);
+        
+        // Service 
+        assertEquals(null, image_url);
     }
 }
