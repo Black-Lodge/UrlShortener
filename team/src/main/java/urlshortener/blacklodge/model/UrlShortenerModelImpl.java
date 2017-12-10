@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.services.CheckWordsService;
+import urlshortener.blacklodge.services.MemeImageGeneratorService;
 import urlshortener.blacklodge.services.SafeBrowsingService;
 
 /**
@@ -25,8 +26,8 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     //@Autowired
     //HashGeneratorService hashGeneratorService;
     
-    //@Autowired
-    //MemeImageGeneratorService memeImageGeneratorService;
+    @Autowired
+    MemeImageGeneratorService memeImageGeneratorService;
     
     public String shorten(String url) {
         /*
