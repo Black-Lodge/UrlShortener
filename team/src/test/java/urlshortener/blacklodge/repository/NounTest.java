@@ -31,7 +31,7 @@ public class NounTest {
 
     @Test
     public void getNumber() {
-        assertEquals(repository.number(),new Integer(79330));
+        assertEquals(repository.number(),new Integer(65232));
     }
 
     @Test

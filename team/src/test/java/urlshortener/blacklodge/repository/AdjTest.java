@@ -31,7 +31,7 @@ public class AdjTest {
 
     @Test
     public void getNumber() {
-        assertEquals(repository.number(),new Integer(15735));
+        assertEquals(repository.number(),new Integer(11947));
     }
 
     @Test
