@@ -1,4 +1,4 @@
-package urlshortener.blacklodge.checkWords;
+package urlshortener.blacklodge.services;
 
 import org.glassfish.grizzly.Grizzly;
 import org.springframework.http.ResponseEntity;
@@ -7,9 +7,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.logging.Logger;
 
 @Service
-public class checkWordsImpl implements checkWords {
+public class CheckWordsServiceImpl implements CheckWordsService {
     private static final String URL = "http://www.wdylike.appspot.com/?q=";
-    private static final Logger LOGGER = Grizzly.logger(checkWordsImpl.class);
+    private static final Logger LOGGER = Grizzly.logger(CheckWordsServiceImpl.class);
 
     public boolean check(String query) {
         RestTemplate restTemplate = new RestTemplate();
