@@ -1,9 +1,11 @@
 package urlshortener.blacklodge.model;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.services.CheckWordsService;
+import urlshortener.blacklodge.services.MemeImageGeneratorService;
 import urlshortener.blacklodge.services.SafeBrowsingService;
 
 /**
@@ -12,9 +14,6 @@ import urlshortener.blacklodge.services.SafeBrowsingService;
  */
 @Component
 public class UrlShortenerModelImpl implements UrlShortenerModel {
-    
-    //@Autowired
-    //ValidateUrlService validateUrlService;
 
     @Autowired
     SafeBrowsingService safeBrowsingService;
@@ -25,13 +24,16 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     //@Autowired
     //HashGeneratorService hashGeneratorService;
     
-    //@Autowired
-    //MemeImageGeneratorService memeImageGeneratorService;
+    @Autowired
+    MemeImageGeneratorService memeImageGeneratorService;
     
     public String shorten(String url) {
+
         /*
+        UrlValidator urlValidator = new UrlValidator(new String[] { "http",
+                "https" });
         // Validate URL, Safe url, No bad words
-        if (validateUrlService.validate(url) && 
+        if (urlValidator.isValid(url) && 
                 safeBrowisngService.checkSafetyUrl(url) &&
                 checkWordsService.checkWords(url)) {
             
