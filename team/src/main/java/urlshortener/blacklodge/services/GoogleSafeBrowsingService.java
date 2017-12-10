@@ -76,6 +76,7 @@ public class GoogleSafeBrowsingService implements SafeBrowsingService {
 
         } catch (Exception e) {
             LOGGER.error("LookUp failed for url {}. Error: {}", url, e.getMessage());
+            // TODO: Quiza lanzar una excepcion para que nuestro servicio entre en modo 404.
             return false;
         }
     
