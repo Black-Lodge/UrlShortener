@@ -35,7 +35,7 @@ public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
         } catch (Exception e) {
             LOGGER.error("Generate meme image failed for Noun: {}, Adj: {}. Error: {}", noun, adj, e.getMessage());
             // TODO: Quiza lanzar una excepcion para que nuestro servicio entre en modo 404.
-            return null;
+            return "https://i.imgflip.com/20tzw3.jpg";
         }
     }
 

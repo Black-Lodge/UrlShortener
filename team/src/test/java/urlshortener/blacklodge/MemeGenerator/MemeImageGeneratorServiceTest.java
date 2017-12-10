@@ -23,6 +23,6 @@ public class MemeImageGeneratorServiceTest {
         String image_url = memeImageGeneratorService.generateImage("lodge", "black");
         
         // Service 
-        assertEquals(null, image_url);
+        assertEquals("https://i.imgflip.com/20tzw3.jpg", image_url);
     }
 }
