@@ -37,7 +37,23 @@ public class ShortURL {
 		this.image = image;
 	}
 
-	public ShortURL() {
+    public ShortURL(String hash, String target, URI uri, String sponsor,
+                    Date created, String owner, Integer mode, Boolean safe, String ip,
+                    String country) {
+        this.hash = hash;
+        this.target = target;
+        this.uri = uri;
+        this.sponsor = sponsor;
+        this.created = created;
+        this.owner = owner;
+        this.mode = mode;
+        this.safe = safe;
+        this.ip = ip;
+        this.country = country;
+	}
+
+
+    public ShortURL() {
 	}
 
 	public String getHash() {
