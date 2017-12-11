@@ -6,8 +6,6 @@ import java.sql.Date;
 public class ShortURL {
 
 	private String hash;
-	private Integer hash1;
-	private Integer hash2;
 	private String target;
 	private URI uri;
 	private String sponsor;
@@ -19,27 +17,9 @@ public class ShortURL {
 	private String country;
 	private URI image;
 
-	public ShortURL(String hash, Integer hash1, Integer hash2, String target, URI uri, String sponsor,
-			Date created, String owner, Integer mode, Boolean safe, String ip,
-			String country, URI image) {
-		this.hash = hash;
-		this.hash1 = hash1;
-		this.hash2 = hash2;
-		this.target = target;
-		this.uri = uri;
-		this.sponsor = sponsor;
-		this.created = created;
-		this.owner = owner;
-		this.mode = mode;
-		this.safe = safe;
-		this.ip = ip;
-		this.country = country;
-		this.image = image;
-	}
-
     public ShortURL(String hash, String target, URI uri, String sponsor,
                     Date created, String owner, Integer mode, Boolean safe, String ip,
-                    String country) {
+                    String country, URI image) {
         this.hash = hash;
         this.target = target;
         this.uri = uri;
@@ -50,6 +30,7 @@ public class ShortURL {
         this.safe = safe;
         this.ip = ip;
         this.country = country;
+        this.image = image;
 	}
 
 
@@ -59,10 +40,6 @@ public class ShortURL {
 	public String getHash() {
 		return hash;
 	}
-
-	public Integer getHash1() { return hash1; }
-
-	public Integer getHash2() { return hash2; }
 
 	public String getTarget() {
 		return target;

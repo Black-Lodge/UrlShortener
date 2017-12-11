@@ -7,6 +7,6 @@ import urlshortener.common.domain.ShortURL;
 
 public interface CsvUploadModel {
     
-    List<ShortURL> csvUpload(MultipartFile file);
+    List<ShortURL> csvUpload(MultipartFile file, String sponsor, String owner, String ip);
     
 }

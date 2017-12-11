@@ -17,16 +17,15 @@ public class HashGeneratorTest {
 
     @Test
     public void checkHash() {
-        List<Integer> list = function.hash("https://www.google.es");
-        assertEquals(40,list.get(0).intValue());
-        assertEquals(60,list.get(1).intValue());
+        Long list = function.hash("https://www.google.es");
+        assertEquals(40,list.intValue());
     }
 
 
 
     private static class HashGeneratorforTesting implements HashGeneratorService {
-        public List<Integer> hash (String url) {
-            return new LinkedList<>(Arrays.asList(40,60));
+        public Long hash (String url) {
+            return (long) 40;
         }
     }
 

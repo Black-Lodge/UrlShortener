@@ -23,14 +23,18 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     @Autowired
     UrlShortenerModel urlShortenerModel;
     
-    public List<ShortURL> csvUpload(MultipartFile file) {
+    public List<ShortURL> csvUpload(MultipartFile file, String sponsor, String owner, String ip) {
         
         List<String> urls = processCSV.processCSV(file);
 
         List<ShortURL> urlsShortened = new ArrayList<>();
         
+        ShortURL shortened;
+        
         for (int i = 0; i < urls.size(); i++) {
-            urlsShortened.add(urlShortenerModel.shorten(urls.get(i)));
+            shortened = urlShortenerModel.shorten(urls.get(i), sponsor, owner, ip);
+            
+            if (shortened != null) urlsShortened.add(shortened);
         }
         return urlsShortened;
     }
