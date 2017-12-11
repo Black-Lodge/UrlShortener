@@ -1,7 +1,7 @@
 package urlshortener.blacklodge.domain;
 
 public class MemeImageRequest {
-    private Long template_id;
+    private String template_id;
     private String username;
     private String password;
     private String text0;
@@ -9,13 +9,13 @@ public class MemeImageRequest {
     /**
      * @return the template_id
      */
-    public Long getTemplate_id() {
+    public String getTemplate_id() {
         return template_id;
     }
     /**
      * @param template_id the template_id to set
      */
-    public void setTemplate_id(Long template_id) {
+    public void setTemplate_id(String template_id) {
         this.template_id = template_id;
     }
     /**
@@ -65,6 +65,11 @@ public class MemeImageRequest {
      */
     public void setText1(String text1) {
         this.text1 = text1;
+    }
+    @Override
+    public String toString() {
+        return "template_id=" + template_id + "&username=" + username + "&password=" + password
+                + "&text0=" + text0 + "&text1=" + text1;
     }
     
     

@@ -1,6 +1,7 @@
 package urlshortener.blacklodge.MemeGenerator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,6 @@ public class MemeImageGeneratorServiceTest {
         String image_url = memeImageGeneratorService.generateImage("lodge", "black");
         
         // Service 
-        assertEquals("https://i.imgflip.com/20tzw3.jpg", image_url);
+        assertNotEquals("https://i.imgflip.com/20tzw3.jpg", image_url);
     }
 }
