@@ -3,7 +3,7 @@
 .project
 .classpath
 build/
-
+team/.settings
 team/src/main/resources/application.properties
 
 # Ignore Gradle GUI config
