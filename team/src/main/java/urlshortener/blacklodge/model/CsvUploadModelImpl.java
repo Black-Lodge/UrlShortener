@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import urlshortener.blacklodge.infrastructure.ProcessCSV;
+import urlshortener.common.domain.ShortURL;
 
 /**
  * Logic Model for uploaded CSV file processing
@@ -22,11 +23,11 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     @Autowired
     UrlShortenerModel urlShortenerModel;
     
-    public List<String> csvUpload(MultipartFile file) {
+    public List<ShortURL> csvUpload(MultipartFile file) {
         
         List<String> urls = processCSV.processCSV(file);
 
-        List<String> urlsShortened = new ArrayList<String>();
+        List<ShortURL> urlsShortened = new ArrayList<>();
         
         for (int i = 0; i < urls.size(); i++) {
             urlsShortened.add(urlShortenerModel.shorten(urls.get(i)));

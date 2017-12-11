@@ -146,7 +146,7 @@ public class MetricsServerEndpointTest {
 	        StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
                                               .get(10,SECONDS);
 	        session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
-            Assert.assertEquals("hi",blockingQueue.poll(10,SECONDS));
+            Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
 		}
 		
 		

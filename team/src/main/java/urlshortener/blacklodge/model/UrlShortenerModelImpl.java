@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import urlshortener.blacklodge.services.CheckWordsService;
 import urlshortener.blacklodge.services.MemeImageGeneratorService;
 import urlshortener.blacklodge.services.SafeBrowsingService;
+import urlshortener.common.domain.ShortURL;
 
 /**
  * Logic Model for unique Url shortening
@@ -27,7 +28,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     @Autowired
     MemeImageGeneratorService memeImageGeneratorService;
     
-    public String shorten(String url) {
+    public ShortURL shorten(String url) {
 
         /*
         UrlValidator urlValidator = new UrlValidator(new String[] { "http",
