@@ -2,7 +2,7 @@ package urlshortener.blacklodge.domain;
 
 public class Data {
     private String url;
-    private String pageUrl;
+    private String page_url;
     /**
      * @return the url
      */
@@ -16,17 +16,18 @@ public class Data {
         this.url = url;
     }
     /**
-     * @return the pageUrl
+     * @return the page_url
      */
-    public String getPageUrl() {
-        return pageUrl;
+    public String getPage_url() {
+        return page_url;
     }
     /**
-     * @param pageUrl the pageUrl to set
+     * @param page_url the page_url to set
      */
-    public void setPageUrl(String pageUrl) {
-        this.pageUrl = pageUrl;
+    public void setPage_url(String page_url) {
+        this.page_url = page_url;
     }
+
     
     
 }

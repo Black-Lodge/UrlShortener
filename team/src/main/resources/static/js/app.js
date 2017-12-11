@@ -9,7 +9,7 @@ $(document).ready(
                     data : $(this).serialize(),
                     success : function(msg) {
                         $("#result").html(
-                            "<div class='alert alert-success lead'><a target='_blank' href='"
+                        	 "<div class='alert alert-success lead'><p>This is your URL shortened</p><a target='_blank' href='"
                             + msg.uri
                             + "'>"
                             + msg.uri
@@ -17,7 +17,8 @@ $(document).ready(
                     },
                     error : function() {
                         $("#result").html(
-                                "<div class='alert alert-danger lead'>ERROR</div>");
+                                "<div class='alert alert-danger lead'><p>Oops! Something went wrong while submitting the form. :(</p></div>");
+                        
                     }
                 });
             });
