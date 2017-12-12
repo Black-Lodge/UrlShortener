@@ -5,11 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import urlshortener.common.domain.ShortURL;
 import urlshortener.common.repository.ShortURLRepositoryImpl;
 
 import java.net.URI;
 
+@Repository
 public class ShortURLRepo extends ShortURLRepositoryImpl {
 
     private static final Logger log = LoggerFactory.getLogger(ShortURLRepo.class);
