@@ -73,12 +73,8 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
             
             String hashf = "such_"+noun+"_so_"+adj;
             
-            URI imageUrl = null;
-            try {
-                imageUrl = new URI(memeImageGeneratorService.generateImage(noun, adj));
-            } catch (URISyntaxException e) {
-                return null;
-            }
+            String imageUrl = memeImageGeneratorService.generateImage(noun, adj);
+
             
             URI uri = linkTo(
                     methodOn(UrlShortenerController.class).redirectTo(hashf, null)
@@ -86,8 +82,10 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
                     
             Date created = new Date(System.currentTimeMillis());
             
+
             ShortURL su = new ShortURL(hashf, url, uri, sponsor, created , 
                     owner, HttpStatus.TEMPORARY_REDIRECT.value(), true, ip, null, imageUrl);
+
             
             return su; //shortUrlRepository.save(su);
         } else {
