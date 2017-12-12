@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import urlshortener.blacklodge.repository.AdjRepository;
 import urlshortener.blacklodge.repository.NounRepository;
 import urlshortener.blacklodge.repository.ShortURLRepo;
+import urlshortener.blacklodge.services.CheckAvailabilityService;
 import urlshortener.blacklodge.services.CheckWordsService;
 import urlshortener.blacklodge.services.HashGeneratorService;
 import urlshortener.blacklodge.services.MemeImageGeneratorService;
@@ -42,6 +43,9 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     CheckWordsService checkWordsService;
     
     @Autowired
+    CheckAvailabilityService checkAvailabilityService;
+    
+    @Autowired
     HashGeneratorService hashGeneratorService;
     
     @Autowired
@@ -65,6 +69,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
         // Validate URL, Safe url, No bad words
         if (urlValidator.isValid(url) && 
                 safeBrowsingService.checkSafetyUrl(url) &&
+                checkAvailabilityService.check(url) &&
                 !checkWordsService.check(url)) {
             
             ShortURL result = null;
