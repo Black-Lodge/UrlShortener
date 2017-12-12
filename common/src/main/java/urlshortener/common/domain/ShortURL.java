@@ -15,23 +15,40 @@ public class ShortURL {
 	private Boolean safe;
 	private String ip;
 	private String country;
+	private String image;
 
-	public ShortURL(String hash, String target, URI uri, String sponsor,
-			Date created, String owner, Integer mode, Boolean safe, String ip,
-			String country) {
-		this.hash = hash;
-		this.target = target;
-		this.uri = uri;
-		this.sponsor = sponsor;
-		this.created = created;
-		this.owner = owner;
-		this.mode = mode;
-		this.safe = safe;
-		this.ip = ip;
-		this.country = country;
+    public ShortURL(String hash, String target, URI uri, String sponsor,
+                    Date created, String owner, Integer mode, Boolean safe, String ip,
+                    String country, String image) {
+        this.hash = hash;
+        this.target = target;
+        this.uri = uri;
+        this.sponsor = sponsor;
+        this.created = created;
+        this.owner = owner;
+        this.mode = mode;
+        this.safe = safe;
+        this.ip = ip;
+        this.country = country;
+        this.image = image;
 	}
+    
+    public ShortURL(String hash, String target, URI uri, String sponsor,
+                    Date created, String owner, Integer mode, Boolean safe, String ip,
+                    String country) {
+        this.hash = hash;
+        this.target = target;
+        this.uri = uri;
+        this.sponsor = sponsor;
+        this.created = created;
+        this.owner = owner;
+        this.mode = mode;
+        this.safe = safe;
+        this.ip = ip;
+        this.country = country;
+    }    
 
-	public ShortURL() {
+    public ShortURL() {
 	}
 
 	public String getHash() {
@@ -74,4 +91,5 @@ public class ShortURL {
 		return country;
 	}
 
+	public String getImage() { return image; }
 }

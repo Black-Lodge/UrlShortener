@@ -1,5 +1,7 @@
 package urlshortener.blacklodge.model;
 
+import urlshortener.common.domain.ShortURL;
+
 public interface UrlShortenerModel {
-    String shorten(String url);
+    ShortURL shorten(String url, String sponsor, String owner, String ip);
 }

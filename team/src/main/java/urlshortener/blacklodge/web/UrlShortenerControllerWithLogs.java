@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.metrics.GaugeService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.common.domain.ShortURL;
 import urlshortener.common.web.UrlShortenerController;
 
@@ -27,6 +31,9 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 	private static Set<String> ips = new HashSet<String>() ;
 	
 	private final GaugeService gaugeService;
+	
+	@Autowired
+	UrlShortenerModel urlShortenerModel;
 	
 	@Autowired
     public UrlShortenerControllerWithLogs(final GaugeService gaugeService) {
@@ -54,7 +61,11 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		this.gaugeService.submit("lastRedirection", end);
 		return a;
 	}
-
+	
+	private String extractIP(HttpServletRequest request) {
+	        return request.getRemoteAddr();
+	    }
+	   
 	@Override
 	public ResponseEntity<ShortURL> shortener(@RequestParam("url") String url,
 											  @RequestParam(value = "sponsor", required = false) String sponsor,
@@ -64,16 +75,29 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		long start = System.currentTimeMillis();
 		
 		logger.info("Requested new short for uri " + url);
-		ResponseEntity<ShortURL> a = super.shortener(url, sponsor, request);
+		//ResponseEntity<ShortURL> a = super.shortener(url, sponsor, request);
 		
-		//Update actuator with the total urls saved
-		this.gaugeService.submit("uris", shortURLRepository.count().intValue());
-		//Update actuator with total users with diferent ip
-		ips.add(request.getRemoteAddr());
-		this.gaugeService.submit("users", ips.size());
 		
-		long end = System.currentTimeMillis()-start;
-		this.gaugeService.submit("lastPetition", end);
-		return a;
+		ShortURL su = urlShortenerModel.shorten(url, sponsor, UUID
+                .randomUUID().toString(), extractIP(request));
+		
+	    //Update actuator with the total urls saved
+        this.gaugeService.submit("uris", shortURLRepository.count().intValue());
+        //Update actuator with total users with diferent ip
+        ips.add(request.getRemoteAddr());
+        this.gaugeService.submit("users", ips.size());
+        
+        long end = System.currentTimeMillis()-start;
+        this.gaugeService.submit("lastPetition", end);
+        
+        if (su != null) {
+            HttpHeaders h = new HttpHeaders();
+            h.setLocation(su.getUri());
+            return new ResponseEntity<>(su, h, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+
 	}
 }
