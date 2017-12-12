@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class HashGeneratorServiceImpl implements HashGeneratorService {
-    private static HashFunction function = Hashing.murmur3_32();
+    private static HashFunction function = Hashing.murmur3_128();
 
     public Long hash (String url) {
         return function.hashString(url, StandardCharsets.UTF_8).asLong();

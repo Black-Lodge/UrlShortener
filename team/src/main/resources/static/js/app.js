@@ -13,7 +13,9 @@ $(document).ready(
                             + msg.uri
                             + "'>"
                             + msg.uri
-                            + "</a></div>");
+                            + "</a> <p>This is your MEME image</p><img src='"
+                            + msg.image
+                            + "'/> </div>");
                     },
                     error : function() {
                         $("#result").html(
