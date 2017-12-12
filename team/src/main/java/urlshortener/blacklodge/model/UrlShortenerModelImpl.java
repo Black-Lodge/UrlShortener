@@ -1,7 +1,6 @@
 package urlshortener.blacklodge.model;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Date;
 
 import org.apache.commons.validator.routines.UrlValidator;
@@ -13,13 +12,14 @@ import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.repository.AdjRepository;
 import urlshortener.blacklodge.repository.NounRepository;
+import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.services.CheckWordsService;
-import urlshortener.blacklodge.services.GoogleSafeBrowsingService;
 import urlshortener.blacklodge.services.HashGeneratorService;
 import urlshortener.blacklodge.services.MemeImageGeneratorService;
 import urlshortener.blacklodge.services.SafeBrowsingService;
+import urlshortener.blacklodge.web.UrlShortenerControllerWithLogs;
 import urlshortener.common.domain.ShortURL;
-import urlshortener.common.web.UrlShortenerController;
+
 
 import static java.lang.Math.pow;
 import static java.lang.Math.abs;
@@ -53,6 +53,9 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     @Autowired
     NounRepository nounRepository;
     
+    @Autowired
+    ShortURLRepo shortUrlRepository;
+    
     public ShortURL shorten(String url, String sponsor, String owner, String ip) {
 
         
@@ -64,30 +67,40 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
                 safeBrowsingService.checkSafetyUrl(url) &&
                 !checkWordsService.check(url)) {
             
-            Long hash = hashGeneratorService.hash(url);
+            ShortURL result = null;
+            ShortURL su;
+            Long hash;
+            int div;
+            String noun, adj, hashf, imageUrl;
+            Date created;
             
-            int div = (int)pow(10,String.valueOf(hash).length()/2);
+            URI uri;
             
-            String noun = nounRepository.get(abs((int)(hash/div)%nounRepository.number()));
-            String adj = adjRepository.get(abs((int)(hash%div)%adjRepository.number()));
-            
-            String hashf = "such_"+noun+"_so_"+adj;
-            
-            String imageUrl = memeImageGeneratorService.generateImage(noun, adj);
-
-            
-            URI uri = linkTo(
-                    methodOn(UrlShortenerController.class).redirectTo(hashf, null)
-                            ).toUri();
-                    
-            Date created = new Date(System.currentTimeMillis());
-            
-
-            ShortURL su = new ShortURL(hashf, url, uri, sponsor, created , 
-                    owner, HttpStatus.TEMPORARY_REDIRECT.value(), true, ip, null, imageUrl);
-
-            
-            return su; //shortUrlRepository.save(su);
+            while (result == null) {        
+                created = new Date(System.currentTimeMillis());
+                LOGGER.info("Generating hash for {}",url+System.currentTimeMillis());
+                
+                hash = hashGeneratorService.hash(url+System.currentTimeMillis());
+                
+                div = (int)pow(10,String.valueOf(hash).length()/2);
+                
+                noun = nounRepository.get(abs((int)(hash/div)%nounRepository.number()));
+                adj = adjRepository.get(abs((int)(hash%div)%adjRepository.number()));
+                
+                hashf = "such_"+noun+"_so_"+adj;
+                
+                imageUrl = memeImageGeneratorService.generateImage(noun, adj);
+                           
+                uri = linkTo(
+                        methodOn(UrlShortenerControllerWithLogs.class).redirectTo(hashf, null)
+                                ).toUri();
+                                         
+                su = new ShortURL(hashf, url, uri, sponsor, created , 
+                        owner, HttpStatus.TEMPORARY_REDIRECT.value(), true, ip, null, imageUrl);
+                
+                result = shortUrlRepository.save(su);
+            }
+            return result;
         } else {
             LOGGER.error("Shorten URL failed for url: {}. Error: {}", url, "failed");
             return null;

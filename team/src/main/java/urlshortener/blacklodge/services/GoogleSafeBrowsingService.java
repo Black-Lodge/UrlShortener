@@ -61,7 +61,7 @@ public class GoogleSafeBrowsingService implements SafeBrowsingService {
             Safebrowsing.Builder safebrowsingBuilder = new Safebrowsing.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(), new JacksonFactory(), null);
 
-            Safebrowsing safebrowsing = safebrowsingBuilder.build();
+            Safebrowsing safebrowsing = safebrowsingBuilder.setApplicationName("Blacklodge").build();
             Safebrowsing.ThreatMatches.Find find = safebrowsing.threatMatches().find(findThreatMatchesRequest);
             find.setKey(API_KEY);
             
