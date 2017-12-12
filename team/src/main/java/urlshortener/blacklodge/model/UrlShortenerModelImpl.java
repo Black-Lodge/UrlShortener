@@ -78,7 +78,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
             Date created = new Date(System.currentTimeMillis());
             
             ShortURL su = new ShortURL(String.valueOf(hash), url, uri, sponsor, created , 
-                    owner, HttpStatus.TEMPORARY_REDIRECT.value(), true, ip, null, imageUrl);
+                    owner, HttpStatus.TEMPORARY_REDIRECT.value(), true, ip, null, imageUrl.toString());
             
             return su; //shortUrlRepository.save(su);
         } else {
