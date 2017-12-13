@@ -3,6 +3,10 @@ package urlshortener.blacklodge.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +23,17 @@ public class MetricsController {
     private SimpMessagingTemplate template;
 
     private InfoCollector metrics = new InfoCollector();
+
+    @MessageMapping("/test")
+    public void test(String message, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        SimpMessageHeaderAccessor ha = SimpMessageHeaderAccessor
+                .create(SimpMessageType.MESSAGE);
+        ha.setSessionId(sessionId);
+        ha.setLeaveMutable(true);
+        logger.info("Private message received\n"+sessionId+"\n"+message);
+        template.convertAndSendToUser(sessionId,"/queue/messages","hi",ha.getMessageHeaders());
+    }
 
     @Scheduled(fixedRate = 120000)
     public void realStats() {
@@ -37,12 +52,10 @@ public class MetricsController {
         return metrics.realStats();
     }
 
-    @SubscribeMapping("/topic/test")
+    @SubscribeMapping("/tests")
     public String connectionOpenedTest() {
         logger.info("Detected subscription");
         return "hi";
     }
-
-
 
 }

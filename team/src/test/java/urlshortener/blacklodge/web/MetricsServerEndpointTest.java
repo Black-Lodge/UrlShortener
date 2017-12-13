@@ -70,7 +70,7 @@ public class MetricsServerEndpointTest {
 		@LocalServerPort
 	    private int port;
 		
-	    static final String WEBSOCKET_TOPIC = "/topic/test";
+	    static final String WEBSOCKET_TOPIC = "/topic/tests";
 
 
 	    BlockingQueue<String> blockingQueue;
@@ -147,6 +147,15 @@ public class MetricsServerEndpointTest {
                                               .get(10,SECONDS);
 	        session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
             Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
+		}
+
+		@Test
+		public void testPrivateWebsocket() throws InterruptedException, ExecutionException, TimeoutException {
+			StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+					.get(10,SECONDS);
+			session.subscribe("/user/queue/messages", new DefaultStompFrameHandler());
+			session.send("/app/test","Hi".getBytes());
+			Assert.assertEquals("hi",blockingQueue.poll(2,SECONDS));
 		}
 		
 		
