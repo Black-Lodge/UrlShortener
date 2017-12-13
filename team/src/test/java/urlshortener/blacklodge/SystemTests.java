@@ -54,7 +54,6 @@ public class SystemTests {
 	@Test
 	public void testCreateLink() throws Exception {
 		ResponseEntity<String> entity = postLink("http://example.com/");
-
 		assertThat(entity.getStatusCode(), is(HttpStatus.CREATED));
 		assertThat(entity.getHeaders().getLocation(), is(new URI("http://localhost:"+ this.port+"/such_sole_so_unregretful")));
 		assertThat(entity.getHeaders().getContentType(), is(new MediaType("application", "json", Charset.forName("UTF-8"))));
@@ -67,9 +66,9 @@ public class SystemTests {
 
 	@Test
 	public void testRedirection() throws Exception {
-		postLink("http://example.com/");
-
-		ResponseEntity<String> entity = restTemplate.getForEntity( "/f684a3c4", String.class);
+		ResponseEntity<String> entity2 = postLink("http://example.com/");
+		ReadContext rc = JsonPath.parse(entity2.getBody());
+		ResponseEntity<String> entity = restTemplate.getForEntity( "/"+rc.read("$.hash"), String.class);
 		assertThat(entity.getStatusCode(), is(HttpStatus.TEMPORARY_REDIRECT));
 		assertThat(entity.getHeaders().getLocation(), is(new URI("http://example.com/")));
 	}

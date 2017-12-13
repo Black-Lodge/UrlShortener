@@ -20,13 +20,13 @@ public class MetricsController {
 
     private InfoCollector metrics = new InfoCollector();
 
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void realStats() {
         logger.info("Real stats sent");
         this.template.convertAndSend("/topic/stats", metrics.realStats());
     }
 
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void testStats() {
         this.template.convertAndSend("/topic/test", metrics.fakeStats());
     }
