@@ -28,7 +28,9 @@ public class checkAvailabilityServiceTest {
     
     @Test
     public void checkFailure() throws Exception {
-        boolean checkResult = checkAvailabilityService.check("http://example.com");
+        boolean checkResult = checkAvailabilityService.check("http://examplefail.com");
+        assertEquals(false,checkResult);
+        checkResult = checkAvailabilityService.check("https://examplefailsecure.com");
         assertEquals(false,checkResult);
     }
 }

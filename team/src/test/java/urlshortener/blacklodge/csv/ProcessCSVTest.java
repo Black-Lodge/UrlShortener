@@ -24,7 +24,7 @@ public class ProcessCSVTest {
     @Test
     public void processCSVTest() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
-                "text/plain", "https://google.com\nhttp://moodle.unizar.com".getBytes());
+                "multipart/form-data", "https://google.com\nhttp://moodle.unizar.com".getBytes());
         List<String> urls = processCSV.processCSV(multipartFile);
         assertEquals(2, urls.size());
         assertEquals("https://google.com", urls.get(0));

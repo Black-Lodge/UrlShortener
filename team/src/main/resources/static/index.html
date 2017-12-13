@@ -37,7 +37,7 @@
 				<h1>URL Shortener</h1>
 				<h3 class="heading">SLOGAN: MEME</h3>
 				<div class="sign-up-form w-form">
-					<form name="wf-form-signup-form" data-name="Signup Form" id="shortener" action="" data-redirect="/success" class="w-clearfix">
+					<form name="shortener-form" id="shortener" class="w-clearfix">
 						<input class="field w-input" maxlength="256" name="url" data-name="URL" placeholder="Paste a link to shorten it" id="URL" required="true" type="text">
 						<input value="SHORTEN" data-wait="Please wait..." class="button w-button" type="submit">
 					</form>
@@ -50,8 +50,8 @@
 			<div class="container-2 w-container">
 				<h2>Also, you can submit a CSV</h2>
 				<div class="w-form">
-					<form id="email-form" name="email-form" data-name="Email Form" class="w-clearfix">
-						<input class="field w-input" maxlength="256" name="URL-2" data-name="URL 2" placeholder="Paste CSV" id="URL-2" required="" type="email">
+					<form id="email-form" name="csv-form" class="w-clearfix">
+						<input class="field w-input" name="csv" placeholder="Paste CSV" id="csv" type="file">
 						<input value="SUBMIT" data-wait="Please wait..." class="button w-button" type="submit">
 					</form>
 					<div class="w-form-done">
@@ -66,7 +66,7 @@
 		</div>
 		<div class="section-2">
 			<div class="w-container">
-				<h2 class="heading-2">Stadistics</h2>
+				<h2 class="heading-2">Statistics</h2>
 				<div class="w-row">
 					<div class="w-col w-col-6 w-col-small-6 w-col-tiny-6">
 						<br>					
