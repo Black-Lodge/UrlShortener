@@ -53,6 +53,10 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
+
 import urlshortener.blacklodge.Application;
 import urlshortener.blacklodge.metrics.InfoCollector;
 
@@ -93,8 +97,11 @@ public class MetricsServerEndpointTest {
 		
 		@Test(timeout = 120000)
 		public void testGetSpecialMetrics() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		   postLink("http://example.com/");
-		  
+		 
+
+		    String hash = JsonPath.parse(postLink("http://www.google.es/").getBody()).read("$.hash");
+		    
+			
 		   ResponseEntity<String> entity = restTemplate.getForEntity("/metrics", String.class);
 		   String json = entity.getBody();
 		    JSONObject p = null;
@@ -114,10 +121,10 @@ public class MetricsServerEndpointTest {
 		    
 		   assertTrue(uris == 1);
 		  
-
-			ResponseEntity<String> entity2 = restTemplate.getForEntity( "/f684a3c4", String.class);
+		   logger.info("HASH: "+ hash);
+			ResponseEntity<String> entity2 = restTemplate.getForEntity( "/"+hash, String.class);
 			assertThat(entity2.getStatusCode(), is(HttpStatus.TEMPORARY_REDIRECT));
-			assertThat(entity2.getHeaders().getLocation(), is(new URI("http://example.com/")));
+			assertThat(entity2.getHeaders().getLocation(), is(new URI("http://www.google.es/")));
 			
 			entity = restTemplate.getForEntity("/metrics", String.class);
 			
@@ -133,6 +140,7 @@ public class MetricsServerEndpointTest {
 			    int clicks = 0;
 			    try {
 			    	clicks = p.getInt("gauge.clicks");
+			    	logger.info("Test p "+p);
 				} catch (JSONException e) {
 					
 				}
