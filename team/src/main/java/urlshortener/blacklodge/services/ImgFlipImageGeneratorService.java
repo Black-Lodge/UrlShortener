@@ -38,8 +38,8 @@ public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
         mrequest.setTemplate_id(TEMPLATE_ID);
         mrequest.setUsername(username);
         mrequest.setPassword(password);
-        mrequest.setText0(noun);
-        mrequest.setText1(adj);
+        mrequest.setText0("such "+noun);
+        mrequest.setText1("so "+adj);
         
         RestTemplate restTemplate = new RestTemplate();
         
