@@ -124,7 +124,7 @@ public class MetricsServerEndpointTest {
 		   logger.info("HASH: "+ hash);
 			ResponseEntity<String> entity2 = restTemplate.getForEntity( "/"+hash, String.class);
 			assertThat(entity2.getStatusCode(), is(HttpStatus.TEMPORARY_REDIRECT));
-			assertThat(entity2.getHeaders().getLocation(), is(new URI("http://example.com/")));
+			assertThat(entity2.getHeaders().getLocation(), is(new URI("http://www.google.es/")));
 			
 			entity = restTemplate.getForEntity("/metrics", String.class);
 			
