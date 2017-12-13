@@ -18,12 +18,13 @@ public class CheckAvailabilityServiceImpl implements CheckAvailabilityService {
     public boolean check (String url) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setConnectTimeout(3000);
+            //LOGGER.info(connection.getURL().toString());
+            connection.setConnectTimeout(10000);
             connection.setRequestMethod("GET");
             int responseCode = connection.getResponseCode();
             return 200 == responseCode;
         } catch (IOException e) {
-            LOGGER.error("Check availability failed for url {}. Error: {}.", url, e.getMessage());
+            LOGGER.error("Connection failed for URL {}. Error: {}.", url, e.getMessage());
             return false;
         }
     }
