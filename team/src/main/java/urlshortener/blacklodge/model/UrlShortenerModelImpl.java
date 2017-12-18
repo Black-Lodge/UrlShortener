@@ -34,7 +34,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Component
 public class UrlShortenerModelImpl implements UrlShortenerModel {
     
-    private final static Logger LOGGER = LoggerFactory.getLogger(UrlShortenerModelImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(UrlShortenerModelImpl.class);
     
     @Autowired
     SafeBrowsingService safeBrowsingService;
@@ -83,7 +83,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
             
             while (result == null) {        
                 created = new Date(System.currentTimeMillis());
-                LOGGER.info("Generating hash for {}",url+System.currentTimeMillis());
+                logger.info("Generating hash for {}",url+System.currentTimeMillis());
                 
                 hash = hashGeneratorService.hash(url+System.currentTimeMillis());
                 
@@ -107,7 +107,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
             }
             return result;
         } else {
-            LOGGER.error("Shorten URL failed for url: {}. Error: {}", url, "failed");
+            logger.error("Shorten URL failed for url: {}. Error: {}", url, "failed");
             return null;
         }   
     }

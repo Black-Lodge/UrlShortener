@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class GoogleSafeBrowsingService implements SafeBrowsingService {
 
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(GoogleSafeBrowsingService.class);
+    private final static Logger logger = LoggerFactory.getLogger(GoogleSafeBrowsingService.class);
     
     @Value("${GSB.api_key}")
     private String API_KEY;
@@ -75,7 +75,7 @@ public class GoogleSafeBrowsingService implements SafeBrowsingService {
             
 
         } catch (Exception e) {
-            LOGGER.error("LookUp failed for url {}. Error: {}", url, e.getMessage());
+            logger.error("LookUp failed for url {}. Error: {}", url, e.getMessage());
             // TODO: Quiza lanzar una excepcion para que nuestro servicio entre en modo 404.
             return false;
         }

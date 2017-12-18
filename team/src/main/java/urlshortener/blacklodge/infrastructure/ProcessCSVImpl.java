@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class ProcessCSVImpl implements ProcessCSV {
     
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProcessCSVImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(ProcessCSVImpl.class);
     
     @Override
     public List<String> processCSV(MultipartFile file) {
@@ -37,7 +37,7 @@ public class ProcessCSVImpl implements ProcessCSV {
             is.close();
             return urls;
         } catch (IOException e) {
-            LOGGER.error("Process CSV failed for CSV file {}. Error: {}", file.getName(), e.getMessage());
+            logger.error("Process CSV failed for CSV file {}. Error: {}", file.getName(), e.getMessage());
             return null;
         } 
     }
