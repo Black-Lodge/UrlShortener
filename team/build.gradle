@@ -21,14 +21,19 @@ dependencies {
     // Google Safa Browsings
     compile 'com.google.apis:google-api-services-safebrowsing:v4-rev37-1.23.0'
 
-    //Metrics
+    // Metrics
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-    //Metrics - WebSockets
+    
+    // Metrics - WebSockets
     compile 'org.springframework.boot:spring-boot-starter-websocket'
     compile 'org.springframework:spring-websocket'
     compile 'org.springframework:spring-messaging'
 	compile 'org.json:json:20141113'
 	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
+	
+	// JSP
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-devtools")
 	
     // Testing framework
     testCompile 'org.springframework.boot:spring-boot-starter-test'
