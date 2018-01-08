@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -59,7 +62,18 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		
 		long end = System.currentTimeMillis()-start;
 		this.gaugeService.submit("lastRedirection", end);
-		return a;
+		
+		//Comprobar si tiene anuncios para que se encarge el controlador de anuncios
+		if (true) { //Actualizar metodo para que lea si contiene realmente anuncios
+			//tiene anunciones
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Location", "/ads/"+id);
+			return new ResponseEntity<String>(headers,HttpStatus.FOUND);
+		}else {
+			return a;
+		}
+		
+		
 	}
 	
 	private String extractIP(HttpServletRequest request) {
