@@ -30,7 +30,14 @@ dependencies {
 	compile 'org.json:json:20141113'
 	compile 'com.fasterxml.jackson.core:jackson-core:2.8.10'
 	
+	// Apache camel
+	compile("org.apache.camel:camel-spring-boot:2.20.1")
+	compile group: 'org.apache.camel', name: 'camel-csv', version: '2.20.1'
+	compile group: 'org.apache.camel', name: 'camel-stream', version: '2.20.1'
+	
     // Testing framework
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.apache.httpcomponents:httpclient'
+    
+    
 }
