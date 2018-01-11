@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +34,9 @@ import urlshortener.common.domain.ShortURL;
 public class AdsController {
 	private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
 	private Map<String,Integer> countdowns = Collections.synchronizedMap(new HashMap<String,Integer>());
-	private Map<String,String> uris = Collections.synchronizedMap(new HashMap<String,String>());
+	public final static Integer MAXSECONDS = 12; // +2 seconds to let time to play video of 10 seconds
 	
-	private Integer MAXSECONDS = 10;
-	
-	
-    ShortURLRepo sr;
+	ShortURLRepo sr;
     
     @Autowired
 	public AdsController(ShortURLRepo sr) {
@@ -51,32 +49,33 @@ public class AdsController {
 	@RequestMapping(value = "/ads/{id}")
 	public String redirectWithAds(@PathVariable String id, Model model) {
 		model.addAttribute("msg", id);
-		ShortURL s = sr.findByKey(id);
-		String path = s.getTarget();
-		logger.info("sending to ads view "+ path);
-		uris.put(id, path);
+		//generate random video 0-10
+		model.addAttribute("video",(int)(Math.random()*10));
+		logger.info("ads petition");
 		return "ads";
 	}
 	
 	@Scheduled(fixedRate = 1000)
     public void updateCountdown() {
 		//Update people waiting for ads
-		Set<String> ks = countdowns.keySet();
-		for (String key : ks) {
-			Integer result = countdowns.get(key) -1;
+		Set<String> codes = countdowns.keySet();
+		for (String code : codes) {
+			String id = code.split("/")[0];
+			Integer result = countdowns.get(code) -1;
 			if (result == 0) {
-				this.template.convertAndSend("/topic/ads/"+key, new AdsResponse(result,uris.get(key)));
-				countdowns.remove(key);
+				logger.info("Sending real url to client "+code);
+				this.template.convertAndSend("/topic/ads/"+code+"/", new AdsResponse(result,sr.findByKey(id).getTarget().toString()));
+				countdowns.remove(code);
 			}else {
-				this.template.convertAndSend("/topic/ads/"+key,  new AdsResponse(result,null));
-				countdowns.put(key, result);
+				this.template.convertAndSend("/topic/ads/"+code+"/",  new AdsResponse(result,null));
+				countdowns.put(code, result);
 			}
 		}
     }
 
-    @SubscribeMapping("/topic/ads/{id}")
-    public void connectionOpened(@DestinationVariable String id) {
-        logger.info("Detected subscription to ads "+id);
-        countdowns.put(id,MAXSECONDS);
+    @SubscribeMapping("/topic/ads/{id}/{userkey}/")
+    public void connectionOpened(@DestinationVariable String id,@DestinationVariable String userkey) {
+        logger.info("Detected subscription to ads "+id+" with key "+userkey);
+        countdowns.put(id+"/"+userkey,MAXSECONDS);
     }
 }

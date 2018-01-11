@@ -26,11 +26,15 @@
 					var client = Stomp.over(new SockJS("http://localhost:8080/websockets/"));
 					client.connect( "bob", "sw0rdf1sh", function(frame) {
 						// once connected...
+						var vid = "http://www.youtube.com/embed/videoseries?autoplay=1&list=PLlzeZYnMx7aiP0JLsJlddKFEXw0HkwHf0&index=" + [[${video}]];
+						var userkey = Math.random().toString().slice(2,11);
 						var id = [[${msg}]];
-						subscription_id = client.subscribe("/topic/ads/"+id, function(msg) {
+						$("#iframe").attr("src",vid);
+						subscription_id = client.subscribe("/topic/ads/"+id+"/"+userkey+"/", function(msg) {
 							// handle messages for this subscription
 							var received_msg = jQuery.parseJSON(msg.body);
 							if (received_msg.url != null){
+								//$("#link").html("<a src='"+received_msg.url+"'>Click here to continue</a>");
 								window.location.href = received_msg.url;
 							}else{
 								$("#contador").html(received_msg.countdown);
@@ -64,11 +68,12 @@
 		</div>
 		<div class="hero section">
 			<div class="container w-container">
-				<h1>URL Shortener</h1>
-				
-				<h2>Plantilla para anuncios:</h2>
-				<p><span th:text="'Id: '+ ${msg}"></span></p>
-				<p><span id="contador"></span></p>
+				<h1>URL Shortener</h1>			
+				<p id="link">Tiempo restante: <span id="contador"></span></p>
+				 <iframe width="420" height="315" id="iframe" src="">
+				</iframe> 
+
+					
 			</div>
 			
 		</div>
