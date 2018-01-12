@@ -131,4 +131,25 @@ public class ShortURLRepositoryImpl implements ShortURLRepository {
 			return Collections.emptyList();
 		}
 	}
+	
+	@Override
+    public List<ShortURL> findByOwner(String owner) {
+        try {
+            return jdbc.query("SELECT * FROM shorturl WHERE owner = ?",
+                    new Object[] { owner }, rowMapper);
+        } catch (Exception e) {
+            log.debug("When select for target " + owner , e);
+            return Collections.emptyList();
+        }
+    }
+    
+	@Override
+    public List<ShortURL> findAll() {
+        try {
+            return jdbc.query("SELECT * FROM shorturl", rowMapper);
+        } catch (Exception e) {
+            log.debug("When select for all", e);
+            return Collections.emptyList();
+        }
+    }
 }

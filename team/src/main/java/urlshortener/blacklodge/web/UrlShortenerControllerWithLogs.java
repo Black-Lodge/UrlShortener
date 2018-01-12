@@ -49,6 +49,8 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		long start = System.currentTimeMillis();
 		
 		logger.info("Requested redirection with hash " + id);
+		// TODO: creo que hay que modificar esto, porque el de super no 
+		// chequea si el url almacenada es safe en el momento o no
 		ResponseEntity<?> a = super.redirectTo(id, request);
 		
 		//Update actuator with the click counts

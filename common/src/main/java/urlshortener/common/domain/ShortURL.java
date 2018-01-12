@@ -92,4 +92,83 @@ public class ShortURL {
 	}
 
 	public String getImage() { return image; }
+
+    /**
+     * @param hash the hash to set
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
+     * @param target the target to set
+     */
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    /**
+     * @param uri the uri to set
+     */
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+
+    /**
+     * @param sponsor the sponsor to set
+     */
+    public void setSponsor(String sponsor) {
+        this.sponsor = sponsor;
+    }
+
+    /**
+     * @param created the created to set
+     */
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    /**
+     * @param owner the owner to set
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    /**
+     * @param mode the mode to set
+     */
+    public void setMode(Integer mode) {
+        this.mode = mode;
+    }
+
+    /**
+     * @param safe the safe to set
+     */
+    public void setSafe(Boolean safe) {
+        this.safe = safe;
+    }
+
+    /**
+     * @param ip the ip to set
+     */
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    /**
+     * @param country the country to set
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
+    }
+	
+	
 }
