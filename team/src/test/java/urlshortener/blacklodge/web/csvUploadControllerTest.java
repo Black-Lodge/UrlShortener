@@ -10,6 +10,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.net.URI;
 import java.nio.charset.Charset;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class csvUploadControllerTest {
     @LocalServerPort
     private int port;
 
-
+    @Ignore	
     @Test
     public void testCsvUpload() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
