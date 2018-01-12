@@ -19,7 +19,7 @@ import urlshortener.blacklodge.domain.MemeImageResponse;
 @Service
 public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
     
-    private final static Logger LOGGER = LoggerFactory.getLogger(ImgFlipImageGeneratorService.class);
+    private final static Logger logger = LoggerFactory.getLogger(ImgFlipImageGeneratorService.class);
     
     private final static String IMGFLIP_URL = "https://api.imgflip.com/caption_image?";
     
@@ -53,7 +53,7 @@ public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
 
             return response.getBody().getData().getUrl();
         } catch (Exception e) {
-            LOGGER.error("Generate meme image failed for Noun: {}, Adj: {}. Error: {}", noun, adj, e.getMessage());
+            logger.error("Generate meme image failed for Noun: {}, Adj: {}. Error: {}", noun, adj, e.getMessage());
             // TODO: Quiza lanzar una excepcion para que nuestro servicio entre en modo 404.
             return "https://i.imgflip.com/20tzw3.jpg";
         }
