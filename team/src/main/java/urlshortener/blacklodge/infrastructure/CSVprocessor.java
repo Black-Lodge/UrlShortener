@@ -21,18 +21,22 @@ public class CSVprocessor implements Processor {
     UrlShortenerModel urlShortenermodel;
     
     @Override
-    public void process(Exchange exchange) throws Exception {
-      List<String> url = exchange.getIn().getBody(List.class);
-      
-      // if url.size == 1 and pattern.match("http://")
-      String sponsor = (String) exchange.getIn().getHeader("sponsor");
-      String owner = (String) exchange.getIn().getHeader("owner");
-      String ip = (String) exchange.getIn().getHeader("ip");
-      
-      ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
-      
-      logger.info(shortUrl.getHash());
-
-      exchange.getIn().setBody(shortUrl);
+    public void process(Exchange exchange) {
+      try {
+          List<String> url = exchange.getIn().getBody(List.class);
+          
+          // if url.size == 1 and pattern.match("http://")
+          String sponsor = (String) exchange.getIn().getHeader("sponsor");
+          String owner = (String) exchange.getIn().getHeader("owner");
+          String ip = (String) exchange.getIn().getHeader("ip");
+          
+          ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
+          
+          logger.info(shortUrl.getHash());
+    
+          exchange.getIn().setBody(shortUrl);
+      } catch (Exception e){
+          logger.error("Failed for csv line. Error: {}", e.getMessage());
+      }
    }
-  }
+}

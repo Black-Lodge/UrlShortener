@@ -1,5 +1,8 @@
 package urlshortener.blacklodge.model;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.web.AdsController;
+import urlshortener.blacklodge.web.UrlShortenerControllerWithLogs;
 import urlshortener.common.domain.ShortURL;
 
 
@@ -75,17 +79,18 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     
     public String getResult(String owner) {
        List<ShortURL> results = shortUrlRepository.findByOwner(owner);
-       logger.info("Peticion de owner "+owner);
+       //logger.info("Peticion de owner "+owner);
         String s = "";
         for (ShortURL result:results) {
-        	logger.info(result.toString());
-        	if (result.getTarget() != null && result.getUri() != null) {
-        		s = s + result.getTarget() + "\t" + result.getUri().toString() + "\n";
+        	if (result.getTarget() != null && result.getHash() != null) {
+        		s = s + result.getTarget() + "\t" + linkTo(
+                        methodOn(UrlShortenerControllerWithLogs.class).redirectTo(result.getHash(), null)
+                        ).toUri().toString() + "\n";
         	}else {
         		if (result.getTarget() == null)
         		logger.error("Null pointer on target" + result);
-        		if (result.getUri() == null)
-            	logger.error("Null pointer on uri" + result);
+        		if (result.getHash() == null)
+            	logger.error("Null pointer on Hash" + result);
         	}
         	
          
