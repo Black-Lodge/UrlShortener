@@ -11,6 +11,9 @@ import urlshortener.common.repository.ShortURLRepositoryImpl;
 
 import java.net.URI;
 
+/**
+ * Class that extends the class that controls the persistence of the shorten URLs
+ */
 @Repository
 public class ShortURLRepo extends ShortURLRepositoryImpl {
 
@@ -26,6 +29,11 @@ public class ShortURLRepo extends ShortURLRepositoryImpl {
         super(jdbcTemplate);
     }
 
+    /**
+     * Stores the URL on the database
+     * @param su Short URL to save
+     * @return Saved URL is everything went fine, null url otherwise
+     */
     @Override
     public ShortURL save(ShortURL su) {
         try {
@@ -43,6 +51,11 @@ public class ShortURLRepo extends ShortURLRepositoryImpl {
         return su;
     }
 
+    /**
+     * Looks for a url based on the hash
+     * @param id Hash that is used to search
+     * @return url if it was find. null url otherwise
+     */
     @Override
     public ShortURL findByKey(String id) {
         try {

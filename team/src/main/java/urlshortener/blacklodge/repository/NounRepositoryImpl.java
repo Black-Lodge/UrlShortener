@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.logging.Logger;
 
+/**
+ * Class that controls how nouns are searched on the database
+ */
 @Repository
 public class NounRepositoryImpl implements NounRepository {
 
@@ -18,6 +21,11 @@ public class NounRepositoryImpl implements NounRepository {
         this.jdbc = jdbc;
     }
 
+    /**
+     * Looks for a noun based on its id
+     * @param id id of the noun to retrieve
+     * @return The noun that was found or a null string otherwise
+     */
     @Override
     public String get(int id) {
         try {
@@ -28,6 +36,10 @@ public class NounRepositoryImpl implements NounRepository {
         }
     }
 
+    /**
+     * Returns the number of nouns on the database
+     * @return Number of words
+     */
     @Override
     public Integer number() {
         try {
