@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.common.domain.ShortURL;
 
+/**
+ * Class that implements how the CSV files are processed
+ */
 @Component
 public class CSVprocessor implements Processor {
     
@@ -21,6 +24,9 @@ public class CSVprocessor implements Processor {
     UrlShortenerModel urlShortenermodel;
     
     @Override
+    /**
+     * Processes a line of the CSV file
+     */
     public void process(Exchange exchange) throws Exception {
       List<String> url = exchange.getIn().getBody(List.class);
       
