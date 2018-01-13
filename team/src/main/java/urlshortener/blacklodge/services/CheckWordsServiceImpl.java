@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 @Service
 public class CheckWordsServiceImpl implements CheckWordsService {
     private static final String URL = "http://www.wdylike.appspot.com/?q=";
-    private static final Logger LOGGER = Grizzly.logger(CheckWordsServiceImpl.class);
+    private static final Logger logger = Grizzly.logger(CheckWordsServiceImpl.class);
 
     @Autowired
     private CheckWordsAccesor accesor;

@@ -24,24 +24,13 @@ public class MetricsController {
 
     private InfoCollector metrics = new InfoCollector();
 
-    @MessageMapping("/test")
-    public void test(String message, SimpMessageHeaderAccessor headerAccessor) {
-        String sessionId = headerAccessor.getSessionId();
-        SimpMessageHeaderAccessor ha = SimpMessageHeaderAccessor
-                .create(SimpMessageType.MESSAGE);
-        ha.setSessionId(sessionId);
-        ha.setLeaveMutable(true);
-        logger.info("Private message received\n"+sessionId+"\n"+message);
-        template.convertAndSendToUser(sessionId,"/queue/messages","hi",ha.getMessageHeaders());
-    }
-
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void realStats() {
         logger.info("Real stats sent");
         this.template.convertAndSend("/topic/stats", metrics.realStats());
     }
 
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void testStats() {
         this.template.convertAndSend("/topic/test", metrics.fakeStats());
     }
