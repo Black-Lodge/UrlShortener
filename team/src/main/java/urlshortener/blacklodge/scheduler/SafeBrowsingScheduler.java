@@ -14,6 +14,9 @@ import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.services.SafeBrowsingService;
 import urlshortener.common.domain.ShortURL;
 
+/**
+ * Class that acts a scheduled task that checks if the URLs on the db are still safe
+ */
 @Configuration
 @EnableScheduling
 public class SafeBrowsingScheduler {
@@ -24,7 +27,10 @@ public class SafeBrowsingScheduler {
     
     @Autowired
     ShortURLRepo shortUrlRepository;
-    
+
+    /**
+     * Checks periodically that every URL is still safe
+     */
     @Scheduled(fixedDelay = 50000)
     public void checkSafe() {
         logger.info("Check safe scheduler");
