@@ -10,6 +10,9 @@ import urlshortener.common.repository.ClickRepositoryImpl;
 import urlshortener.common.repository.ShortURLRepository;
 import urlshortener.common.repository.ShortURLRepositoryImpl;
 
+/**
+ * Class that is the configuration of the persistence of the project
+ */
 @Configuration
 public class PersistenceContext {
 
