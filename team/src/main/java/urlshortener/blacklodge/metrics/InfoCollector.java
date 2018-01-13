@@ -23,7 +23,7 @@ public class InfoCollector {
 	
 	/**
 	 * Method that returns fake stats of the system.
-	 * @return
+	 * @return fake stats
 	 */
 	public GlobalInformation fakeStats() {
 
@@ -41,7 +41,7 @@ public class InfoCollector {
 	 * Retrieves the real stats of the system
 	 * from the Actuator service
 	 * 
-	 * @return
+	 * @return Real stats
 	 * @throws JSONException
 	 */
 	public GlobalInformation realStats() {
