@@ -23,6 +23,9 @@ import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.common.domain.ShortURL;
 import urlshortener.common.web.UrlShortenerController;
 
+/**
+ * Class that implements the main controller, a rest controller
+ */
 @RestController
 public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 
@@ -39,9 +42,14 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
     public UrlShortenerControllerWithLogs(final GaugeService gaugeService) {
         this.gaugeService = gaugeService;
      
-	}	
-	
-	
+	}
+
+	/**
+	 * Class that returns the original URL given its hash
+	 * @param id hash
+	 * @param request request
+	 * @return Original URL
+	 */
 	@Override
 	@RequestMapping(value = "/{id:(?!link|index).*}", method = RequestMethod.GET)
 	public ResponseEntity<?> redirectTo(@PathVariable String id, HttpServletRequest request) {
@@ -67,11 +75,23 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		headers.add("Location", "/ads/"+id);
 		return new ResponseEntity<String>(headers,HttpStatus.TEMPORARY_REDIRECT);
 	}
-	
+
+	/**
+	 * Extracts IP from request
+	 * @param request
+	 * @return IP
+	 */
 	private String extractIP(HttpServletRequest request) {
 	        return request.getRemoteAddr();
 	    }
-	   
+
+	/**
+	 * Method that shortens an URL
+ 	 * @param url url to shorten
+	 * @param sponsor ads
+	 * @param request request
+	 * @return shortened URL
+	 */
 	@Override
 	public ResponseEntity<ShortURL> shortener(@RequestParam("url") String url,
 											  @RequestParam(value = "sponsor", required = false) String sponsor,

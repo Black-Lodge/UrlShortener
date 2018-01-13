@@ -29,7 +29,9 @@ import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.common.domain.ShortURL;
 
-
+/**
+ * Class that implements the controller for the ads system
+ */
 @Controller
 public class AdsController {
 	private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
@@ -45,7 +47,13 @@ public class AdsController {
     
 	@Autowired
     private SimpMessagingTemplate template;
-	
+
+	/**
+	 * Redirect petition to the ad page
+	 * @param id hash
+	 * @param model model
+	 * @return name of the ad view
+	 */
 	@RequestMapping(value = "/ads/{id}")
 	public String redirectWithAds(@PathVariable String id, Model model) {
 		model.addAttribute("msg", id);
@@ -54,7 +62,10 @@ public class AdsController {
 		logger.info("ads petition");
 		return "ads";
 	}
-	
+
+    /**
+     * Check if the petitions should be redirected to the original page or not yet
+     */
 	@Scheduled(fixedRate = 1000)
     public void updateCountdown() {
 		//Update people waiting for ads
@@ -73,6 +84,11 @@ public class AdsController {
 		}
     }
 
+    /**
+     * Check if a new connection to the websocket channel was opened
+     * @param id Hash of the url
+     * @param userkey Generated userKey
+     */
     @SubscribeMapping("/topic/ads/{id}/{userkey}/")
     public void connectionOpened(@DestinationVariable String id,@DestinationVariable String userkey) {
         logger.info("Detected subscription to ads "+id+" with key "+userkey);

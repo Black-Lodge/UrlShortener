@@ -15,6 +15,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import urlshortener.blacklodge.metrics.GlobalInformation;
 import urlshortener.blacklodge.metrics.InfoCollector;
 
+/**
+ * Class that implements the controller for the metrics
+ */
 @EnableScheduling
 @Controller
 public class MetricsController {
@@ -24,23 +27,37 @@ public class MetricsController {
 
     private InfoCollector metrics = new InfoCollector();
 
+    /**
+     * Returns the real stats every 2 minutes
+     */
     @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void realStats() {
         logger.info("Real stats sent");
         this.template.convertAndSend("/topic/stats", metrics.realStats());
     }
 
+    /**
+     * Returns some fake stats every 2 minutes
+     */
     @Scheduled(fixedRate = 120000,initialDelay = 5000)
     public void testStats() {
         this.template.convertAndSend("/topic/test", metrics.fakeStats());
     }
 
+    /**
+     * Returns the real stats after a new connection was established
+     * @return metrics
+     */
     @SubscribeMapping("/topic/stats")
     public GlobalInformation connectionOpened() {
         logger.info("Detected subscription");
         return metrics.realStats();
     }
 
+    /**
+     * Returns fake stats after a new connection was established
+     * @return fake metrics
+     */
     @SubscribeMapping("/tests")
     public String connectionOpenedTest() {
         logger.info("Detected subscription");
