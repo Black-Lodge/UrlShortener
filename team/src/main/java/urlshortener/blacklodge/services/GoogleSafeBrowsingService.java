@@ -31,7 +31,6 @@ public class GoogleSafeBrowsingService implements SafeBrowsingService {
 
     /**
      * Lookup an URL
-     *
      * @param url the URL to check.
      * @return true if the URL is trusted; otherwise false.
      */

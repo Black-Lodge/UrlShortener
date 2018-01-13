@@ -16,6 +16,9 @@ import org.springframework.web.client.RestTemplate;
 import urlshortener.blacklodge.domain.MemeImageRequest;
 import urlshortener.blacklodge.domain.MemeImageResponse;
 
+/**
+ * Service that generated meme images using ImgFlip API
+ */
 @Service
 public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
     
@@ -30,7 +33,13 @@ public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
     
     @Value("${ImgFlip.password}")
     private String password;
-    
+
+    /**
+     * Generate a meme image
+     * @param noun First word of the meme
+     * @param adj Second word of the meme
+     * @return URL of the meme image generated using ImgFlip API
+     */
     @Override
     public String generateImage(String noun, String adj) {
         

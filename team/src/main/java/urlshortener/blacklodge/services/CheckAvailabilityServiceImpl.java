@@ -8,12 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * Class that represents a service that checks if a URL is available
+ */
 @Service
 public class CheckAvailabilityServiceImpl implements CheckAvailabilityService {
     
     private final static Logger logger = LoggerFactory.getLogger(CheckAvailabilityServiceImpl.class);
-    
+    /**
+     * Check if a get petition to the url returns 200
+     * @param url URL to check
+     * @return True if GET petition returns 200, false otherwise
+     */
     @Override
     public boolean check (String url) {
         try {

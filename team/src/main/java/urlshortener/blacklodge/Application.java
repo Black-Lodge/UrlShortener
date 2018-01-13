@@ -10,6 +10,12 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 @EnableFeignClients
 @EnableCircuitBreaker
 @SpringBootApplication
+/**
+ * Main class from the project. It launchs the application
+ * Annotations
+ * SpringBootApplication: As seen on the first lab
+ * EnableFeignClients, EnableCircuitBreaker: To enable Feign clients and its functionality
+ */
 public class Application extends SpringBootServletInitializer {
 	
 	
