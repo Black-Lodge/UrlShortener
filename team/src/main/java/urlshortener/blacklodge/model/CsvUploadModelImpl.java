@@ -1,19 +1,22 @@
 package urlshortener.blacklodge.model;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
+//import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import urlshortener.blacklodge.repository.ShortURLRepo;
+import urlshortener.blacklodge.web.AdsController;
 import urlshortener.common.domain.ShortURL;
 
 
@@ -23,14 +26,20 @@ import urlshortener.common.domain.ShortURL;
  */
 @Component
 public class CsvUploadModelImpl implements CsvUploadModel {
-    
+	private static final Logger logger = LoggerFactory.getLogger(CsvUploadModelImpl.class);
+	
     @Autowired
     ProducerTemplate producertemplate;
     
-    @Autowired
+    
     ShortURLRepo shortUrlRepository;
     
-    public String csvUpload(MultipartFile file, String sponsor, String owner, String ip) {
+    @Autowired
+    public CsvUploadModelImpl(ShortURLRepo shortUrlRepository) {
+		this.shortUrlRepository = shortUrlRepository;
+	}
+
+	public String csvUpload(MultipartFile file, String sponsor, String owner, String ip) {
         /*
         List<String> urls = processCSV.processCSV(file);
 
@@ -64,15 +73,26 @@ public class CsvUploadModelImpl implements CsvUploadModel {
         return null;
     }
     
-    public MultipartFile getResult(String owner) {
-        List<ShortURL> results = shortUrlRepository.findByOwner(owner);
+    public String getResult(String owner) {
+       List<ShortURL> results = shortUrlRepository.findByOwner(owner);
+       logger.info("Peticion de owner "+owner);
         String s = "";
         for (ShortURL result:results) {
-            s = s + result.getTarget() + "\t" + result.getUri().toString() + "\n";
+        	logger.info(result.toString());
+        	if (result.getTarget() != null && result.getUri() != null) {
+        		s = s + result.getTarget() + "\t" + result.getUri().toString() + "\n";
+        	}else {
+        		if (result.getTarget() == null)
+        		logger.error("Null pointer on target" + result);
+        		if (result.getUri() == null)
+            	logger.error("Null pointer on uri" + result);
+        	}
+        	
+         
         }
-        
-        return new MockMultipartFile("file", "test.txt",
-                "multipart/form-data", s.getBytes());
+        return s;
+                
+      
     }
-
+	
 }

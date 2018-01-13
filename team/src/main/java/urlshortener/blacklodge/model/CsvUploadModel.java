@@ -9,6 +9,6 @@ public interface CsvUploadModel {
     
     String csvUpload(MultipartFile file, String sponsor, String owner, String ip);
     
-    MultipartFile getResult(String owner);
+    String getResult(String owner);
     
 }
