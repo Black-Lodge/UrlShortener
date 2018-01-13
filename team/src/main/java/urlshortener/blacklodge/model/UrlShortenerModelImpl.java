@@ -59,7 +59,14 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
     
     @Autowired
     ShortURLRepo shortUrlRepository;
-    
+    /**
+     * Shortens a given url
+     * @param url URL to be shortened
+     * @param sponsor Ads
+     * @param owner unique id of the owner
+     * @param ip IP from the request
+     * @return The shortened URL if everything went fine, null otherwise
+     */
     public ShortURL shorten(String url, String sponsor, String owner, String ip) {
 
         

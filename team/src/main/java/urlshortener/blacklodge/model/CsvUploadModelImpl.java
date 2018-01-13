@@ -29,7 +29,15 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     
     @Autowired
     ShortURLRepo shortUrlRepository;
-    
+
+    /**
+     * Shortens the URLs on the file
+     * @param file File where the URLs are stored
+     * @param sponsor Ads
+     * @param owner Owner of the request
+     * @param ip IP from the request
+     * @return The identifier to find the shortened URLs
+     */
     public String csvUpload(MultipartFile file, String sponsor, String owner, String ip) {
         /*
         List<String> urls = processCSV.processCSV(file);
@@ -63,7 +71,12 @@ public class CsvUploadModelImpl implements CsvUploadModel {
         // TODO: Retorna una direccion
         return null;
     }
-    
+
+    /**
+     * Returns the shortened URLs of a given owner
+     * @param owner Owner of the shortened URLs
+     * @return CSV with the shortened URLs
+     */
     public MultipartFile getResult(String owner) {
         List<ShortURL> results = shortUrlRepository.findByOwner(owner);
         String s = "";
