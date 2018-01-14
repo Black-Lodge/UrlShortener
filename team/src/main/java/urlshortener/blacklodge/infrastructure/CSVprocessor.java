@@ -4,6 +4,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,12 +14,15 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.GaugeService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.ads.AdsResponse;
 import urlshortener.blacklodge.csv.CsvResponse;
+import urlshortener.blacklodge.metrics.DiferentUsers;
 import urlshortener.blacklodge.model.UrlShortenerModel;
+import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.web.UrlShortenerControllerWithLogs;
 import urlshortener.common.domain.ShortURL;
 
@@ -35,6 +40,17 @@ public class CSVprocessor implements Processor {
     @Autowired
     private SimpMessagingTemplate template;
     
+    private final GaugeService gaugeService;
+    ShortURLRepo sr;
+    private DiferentUsers ips;
+    
+	@Autowired
+    public CSVprocessor(final GaugeService gaugeService,ShortURLRepo sr, DiferentUsers ips) {
+		this.sr = sr;
+        this.gaugeService = gaugeService;
+        this.ips = ips;
+	}
+	
     @Override
     /**
      * Processes a line of the CSV file
@@ -47,6 +63,8 @@ public class CSVprocessor implements Processor {
       
       try {
           if (url.get(0).matches("^(http|https)://[^\\s\\t]*$")) {  
+        	  //Time to respond the last petition 
+        	 long start = System.currentTimeMillis();
               ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
                   
               //logger.info(shortUrl.getHash());
@@ -57,6 +75,15 @@ public class CSVprocessor implements Processor {
                       ,true
                       ,null);
               template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);   
+              //Update actuator with the total urls saved
+              this.gaugeService.submit("uris", sr.count().intValue());
+              long end = System.currentTimeMillis()-start;
+              this.gaugeService.submit("lastPetition", end);
+              ips.add(ip);
+              this.gaugeService.submit("users", ips.getNumber());
+              logger.info("Ip de process: "+ ip);
+              logger.info("Requested new short for uri " + url);
+      		 
           } else {
               CsvResponse cr = new CsvResponse(url.get(0),
                       null

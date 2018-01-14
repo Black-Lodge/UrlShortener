@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import urlshortener.blacklodge.metrics.DiferentUsers;
 import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.common.domain.ShortURL;
 import urlshortener.common.web.UrlShortenerController;
@@ -31,7 +32,8 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UrlShortenerControllerWithLogs.class);
 	
-	private static Set<String> ips = new HashSet<String>() ;
+	
+	private DiferentUsers ips;
 	
 	private final GaugeService gaugeService;
 	
@@ -39,8 +41,9 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 	UrlShortenerModel urlShortenerModel;
 	
 	@Autowired
-    public UrlShortenerControllerWithLogs(final GaugeService gaugeService) {
+    public UrlShortenerControllerWithLogs(final GaugeService gaugeService, DiferentUsers ips) {
         this.gaugeService = gaugeService;
+        this.ips = ips;
      
 	}
 
@@ -66,8 +69,9 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		//Update actuator with the click counts
 		this.gaugeService.submit("clicks",clickRepository.count().intValue());
 		//Update actuator with total users with diferent ip
-		ips.add(request.getRemoteAddr());
-		this.gaugeService.submit("users", ips.size());
+		ips.add(extractIP(request));
+		logger.info("Ip de redirectoto: "+extractIP(request));
+		this.gaugeService.submit("users", ips.getNumber());
 		
 		long end = System.currentTimeMillis()-start;
 		this.gaugeService.submit("lastRedirection", end);
@@ -110,8 +114,8 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 	    //Update actuator with the total urls saved
         this.gaugeService.submit("uris", shortURLRepository.count().intValue());
         //Update actuator with total users with diferent ip
-        ips.add(request.getRemoteAddr());
-        this.gaugeService.submit("users", ips.size());
+        ips.add(extractIP(request));
+        this.gaugeService.submit("users", ips.getNumber());
         
         long end = System.currentTimeMillis()-start;
         this.gaugeService.submit("lastPetition", end);
