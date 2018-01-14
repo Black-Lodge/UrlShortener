@@ -98,7 +98,7 @@ $(function(){
           }
            
 	      });
-		$("#resultadosubida").html("<h3>Resultados del fichero:</h3><ul></ul>");
+	$("#resultadosubida").html("<h3>Resultados del fichero:</h3><ul></ul>");
 		$("#mensaje").html("<p>Cargando fichero... Espere por favor.</p>");
 		var f = $(this);
 		var formData = new FormData(document.getElementById("email-form"));
