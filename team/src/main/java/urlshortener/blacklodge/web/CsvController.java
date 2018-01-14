@@ -2,6 +2,8 @@ package urlshortener.blacklodge.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,10 @@ public class CsvController {
 	CsvUploadModel csv;
 	
 	@RequestMapping(value = "/uploadFile/{userkey}" , method = RequestMethod.POST)
-	public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file) {
+	public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file, HttpServletRequest request) {
 		logger.info("Detected upload file userkey: "+userkey );
-		csv.csvUpload(file, "Random", userkey, "Random");
+		csv.csvUpload(file, "Random", userkey,request.getRemoteAddr());
+		logger.info("CsvController ip: "+request.getRemoteAddr() );
 		return new ResponseEntity<>("http://localhost:8080/csv/"+userkey+"/", HttpStatus.CREATED);
 	}
 	

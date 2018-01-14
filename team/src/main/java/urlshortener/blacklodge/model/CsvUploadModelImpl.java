@@ -70,7 +70,7 @@ public class CsvUploadModelImpl implements CsvUploadModel {
         headers.put("sponsor", sponsor); 
         headers.put("owner", owner); 
         headers.put("ip", ip); 
-
+        logger.info("ip on csvUpload: "+ip);
         try {
             producertemplate.sendBodyAndHeaders("direct:processCSV", file.getInputStream(), headers);
         } catch (CamelExecutionException e) {

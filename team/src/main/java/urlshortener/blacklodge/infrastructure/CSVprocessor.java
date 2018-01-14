@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import urlshortener.blacklodge.ads.AdsResponse;
 import urlshortener.blacklodge.csv.CsvResponse;
+import urlshortener.blacklodge.metrics.DiferentUsers;
 import urlshortener.blacklodge.model.UrlShortenerModel;
 import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.web.UrlShortenerControllerWithLogs;
@@ -41,11 +42,13 @@ public class CSVprocessor implements Processor {
     
     private final GaugeService gaugeService;
     ShortURLRepo sr;
+    private DiferentUsers ips;
     
 	@Autowired
-    public CSVprocessor(final GaugeService gaugeService,ShortURLRepo sr) {
+    public CSVprocessor(final GaugeService gaugeService,ShortURLRepo sr, DiferentUsers ips) {
 		this.sr = sr;
         this.gaugeService = gaugeService;
+        this.ips = ips;
 	}
 	
     @Override
@@ -76,7 +79,9 @@ public class CSVprocessor implements Processor {
               this.gaugeService.submit("uris", sr.count().intValue());
               long end = System.currentTimeMillis()-start;
               this.gaugeService.submit("lastPetition", end);
-              
+              ips.add(ip);
+              this.gaugeService.submit("users", ips.getNumber());
+              logger.info("Ip de process: "+ ip);
               logger.info("Requested new short for uri " + url);
       		 
           } else {
