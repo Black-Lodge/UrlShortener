@@ -3,7 +3,7 @@ $(function(){
 	var ws = null;
 	google.charts.load('current', {'packages':['corechart']});
 	//google.charts.setOnLoadCallback(drawChart);
-	var userkey = Math.random().toString().slice(2,11);
+	
 	var client = null;
 	function WebSocketTest(){
 		
@@ -79,12 +79,15 @@ $(function(){
 	  chart.draw(data, options);
 		
 	}	
-
+	var subscription_csv = null;
 	$("#email-form").on("submit",function(e){
+		var userkey = Math.random().toString().slice(2,11);
 		var cantidad = 0;
 		e.preventDefault();
-		userkey = Math.random().toString().slice(2,11);
 		//Conect to csv topic for results on file upload
+		if (subscription_csv != null){
+			subscription_csv.unsubscribe();
+		}
         subscription_csv = client.subscribe("/topic/uploadFile/"+userkey+"/", function(msg) {
 	        // handle messages for this subscription 
           var received_msg = jQuery.parseJSON(msg.body);
