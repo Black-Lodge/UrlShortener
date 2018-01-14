@@ -24,8 +24,6 @@ public class Router extends RouteBuilder {
         .split().body(List.class)
         //Process
         .process(csvprocessor);
-
-
     }
 
 }

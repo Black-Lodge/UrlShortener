@@ -4,13 +4,14 @@ $(function(){
 	google.charts.load('current', {'packages':['corechart']});
 	//google.charts.setOnLoadCallback(drawChart);
 	var userkey = Math.random().toString().slice(2,11);
+	var client = null;
 	function WebSocketTest(){
 		
 	  if (ws == null){
 		  
 	
 	  if ("WebSocket" in window){
-		  var client = Stomp.over(new SockJS("http://localhost:8080/websockets/"));
+		  client = Stomp.over(new SockJS("http://localhost:8080/websockets/"));
 		  client.connect( "bob", "sw0rdf1sh", function(frame) {
 	
 	         // once connected...
@@ -43,11 +44,7 @@ $(function(){
 	
 	           
 	            } );
-	         //Conect to csv topic for results on file upload
-	         subscription_csv = client.subscribe("/topic/uploadFile/"+userkey+"/", function(msg) {
-	 	        // handle messages for this subscription 
-	        	 $("#resultadosubida").html(msg);	           
-	 	      });
+	         
 	           
 	      });
 	    }else{
@@ -85,6 +82,20 @@ $(function(){
 
 	$("#email-form").on("submit",function(e){
 		e.preventDefault();
+		userkey = Math.random().toString().slice(2,11);
+		//Conect to csv topic for results on file upload
+        subscription_csv = client.subscribe("/topic/uploadFile/"+userkey+"/", function(msg) {
+	        // handle messages for this subscription 
+          var received_msg = jQuery.parseJSON(msg.body);
+          if (received_msg.correct){
+        		 $("#resultadosubida").append("<p>"+received_msg.from+" -  <a href='"+received_msg.to+"'>"+received_msg.to+"</a></p>");	       
+          }else{
+        		 $("#resultadosubida").append("<p>"+received_msg.from+" -  <span style='color:red;'>Incorrect: "+received_msg.cause+"</span></p>");	       
+          }
+           
+	      });
+		$("#resultadosubida").html("");
+		$("#mensaje").html("<p>Cargando fichero... Espere por favor.</p>");
 		var f = $(this);
 		var formData = new FormData(document.getElementById("email-form"));
 		$.ajax({

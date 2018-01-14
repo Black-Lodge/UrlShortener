@@ -1,5 +1,7 @@
 package urlshortener.blacklodge.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import urlshortener.blacklodge.csv.CsvResponse;
 import urlshortener.blacklodge.model.CsvUploadModel;
 
 
@@ -33,10 +36,15 @@ public class CsvController {
 	}
 	
 	@RequestMapping(value = "/csv/{userkey}" , method = RequestMethod.GET)
-	public ResponseEntity<String> get(@PathVariable String userkey, ModelMap modelMap) {
+	public ResponseEntity<List<CsvResponse>> get(@PathVariable String userkey, ModelMap modelMap) {
 		logger.info("Detected upload file userkey: "+userkey );
-		String f = csv.getResult(userkey);
-		return new ResponseEntity<>(f, HttpStatus.CREATED);
+		List<CsvResponse> f = csv.getResult(userkey);
+		if (f != null) {
+			return new ResponseEntity<>(f, HttpStatus.FOUND);
+		}else {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	@SubscribeMapping("/topic/uploadFile/{userkey}/")

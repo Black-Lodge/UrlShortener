@@ -4,6 +4,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import urlshortener.blacklodge.csv.CsvResponse;
 import urlshortener.blacklodge.repository.ShortURLRepo;
 import urlshortener.blacklodge.web.AdsController;
 import urlshortener.blacklodge.web.UrlShortenerControllerWithLogs;
@@ -77,25 +78,27 @@ public class CsvUploadModelImpl implements CsvUploadModel {
         return null;
     }
     
-    public String getResult(String owner) {
+    public List<CsvResponse> getResult(String owner) {
        List<ShortURL> results = shortUrlRepository.findByOwner(owner);
        //logger.info("Peticion de owner "+owner);
-        String s = "";
+       ArrayList<CsvResponse> list = new ArrayList<CsvResponse>();
         for (ShortURL result:results) {
         	if (result.getTarget() != null && result.getHash() != null) {
-        		s = s + result.getTarget() + "\t" + linkTo(
+        		list.add(new CsvResponse(result.getTarget(),linkTo(
                         methodOn(UrlShortenerControllerWithLogs.class).redirectTo(result.getHash(), null)
-                        ).toUri().toString() + "\n";
+                        ).toUri().toString(),true,null));
+        		
         	}else {
         		if (result.getTarget() == null)
         		logger.error("Null pointer on target" + result);
         		if (result.getHash() == null)
             	logger.error("Null pointer on Hash" + result);
+        		list.add(new CsvResponse(result.getTarget(),null,false,"Bad format"));
         	}
         	
          
         }
-        return s;
+        return list;
                 
       
     }
