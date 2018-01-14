@@ -58,7 +58,7 @@ public class MetricsController {
      * Returns fake stats after a new connection was established
      * @return fake metrics
      */
-    @SubscribeMapping("/tests")
+    @SubscribeMapping("/topic/tests")
     public String connectionOpenedTest() {
         logger.info("Detected subscription");
         return "hi";
