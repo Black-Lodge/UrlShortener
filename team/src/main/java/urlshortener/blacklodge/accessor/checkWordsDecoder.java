@@ -1,6 +1,5 @@
 package urlshortener.blacklodge.accessor;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import feign.FeignException;
 import feign.Response;
 import feign.codec.DecodeException;
