@@ -30,7 +30,7 @@ public class MetricsController {
     /**
      * Returns the real stats every 2 minutes
      */
-    @Scheduled(fixedRate = 120000,initialDelay = 5000)
+    @Scheduled(fixedRate = 120000,initialDelay = 60000)
     public void realStats() {
         logger.info("Real stats sent");
         this.template.convertAndSend("/topic/stats", metrics.realStats());
@@ -39,7 +39,7 @@ public class MetricsController {
     /**
      * Returns some fake stats every 2 minutes
      */
-    @Scheduled(fixedRate = 120000,initialDelay = 5000)
+    @Scheduled(fixedRate = 120000,initialDelay = 60000)
     public void testStats() {
         this.template.convertAndSend("/topic/test", metrics.fakeStats());
     }
