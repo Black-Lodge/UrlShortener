@@ -81,6 +81,7 @@ $(function(){
 	}	
 
 	$("#email-form").on("submit",function(e){
+		var cantidad = 0;
 		e.preventDefault();
 		userkey = Math.random().toString().slice(2,11);
 		//Conect to csv topic for results on file upload
@@ -88,13 +89,13 @@ $(function(){
 	        // handle messages for this subscription 
           var received_msg = jQuery.parseJSON(msg.body);
           if (received_msg.correct){
-        		 $("#resultadosubida").append("<p>"+received_msg.from+" -  <a href='"+received_msg.to+"'>"+received_msg.to+"</a></p>");	       
+        		 $("#resultadosubida ul").append("<li>"+received_msg.from+" -  <a href='"+received_msg.to+"'>"+received_msg.to+"</a></li>");	       
           }else{
-        		 $("#resultadosubida").append("<p>"+received_msg.from+" -  <span style='color:red;'>Incorrect: "+received_msg.cause+"</span></p>");	       
+        		 $("#resultadosubida ul").append("<li>"+received_msg.from+" -  <span style='color:red;'>Incorrect: "+received_msg.cause+"</span></li>");	       
           }
            
 	      });
-		$("#resultadosubida").html("");
+		$("#resultadosubida").html("<h3>Resultados del fichero:</h3><ul></ul>");
 		$("#mensaje").html("<p>Cargando fichero... Espere por favor.</p>");
 		var f = $(this);
 		var formData = new FormData(document.getElementById("email-form"));
@@ -108,7 +109,7 @@ $(function(){
 			processData: false
 		})
 		.done(function(res){
-			$("#mensaje").html("Direccion del recurso para obtener los resultados: <a target='_blank' href='"+res+"'>"+res+"</a>");
+			$("#mensaje").html("<h3>Direccion del recurso para obtener los resultados</h3><p><a target='_blank' href='"+res+"'>"+res+"</a><p>");
 		});
 	});
 	
