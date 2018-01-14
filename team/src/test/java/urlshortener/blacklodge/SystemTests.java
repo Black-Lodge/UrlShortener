@@ -24,6 +24,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+/**
+ * Tests that the views are correctly used
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= RANDOM_PORT)
 @DirtiesContext
@@ -35,24 +38,33 @@ public class SystemTests {
 	@LocalServerPort
 	private int port;
 
+	/**
+	 * Tests that the home view is used correctly
+	 */
 	@Test
-	public void testHome() throws Exception {
+	public void testHome(){
 		ResponseEntity<String> entity = restTemplate.getForEntity("/", String.class);
 		assertThat(entity.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(entity.getHeaders().getContentType().isCompatibleWith(new MediaType("text", "html")));
 		assertThat(entity.getBody(), containsString("<title>URL"));
 	}
 
+	/**
+	 * Tests that the CSS is sent correctly
+	 */
 	@Test
-	public void testCss() throws Exception {
+	public void testCss() {
 		ResponseEntity<String> entity = restTemplate.getForEntity("/webjars/bootstrap/3.3.5/css/bootstrap.min.css", String.class);
 		assertThat(entity.getStatusCode(), is(HttpStatus.OK));
 		assertThat(entity.getHeaders().getContentType(), is(MediaType.valueOf("text/css")));
 		assertThat(entity.getBody(), containsString("body"));
 	}
 
+	/**
+	 * Tests that creating a short URL works as expected
+	 */
 	@Test
-	public void testCreateLink() throws Exception {
+	public void testCreateLink() {
 		ResponseEntity<String> entity = postLink("http://example.com/");
 		assertThat(entity.getStatusCode(), is(HttpStatus.CREATED));
 		assertTrue(entity.getHeaders().getLocation().toString().contains("http://localhost:"+ this.port+"/such_"));
@@ -64,8 +76,11 @@ public class SystemTests {
 		assertThat(rc.read("$.sponsor"), is(nullValue()));
 	}
 
+	/**
+	 * Tests that the redirection to the ad page works as expected
+	 */
 	@Test 
-	public void testRedirection() throws Exception {
+	public void testRedirection() {
 		ResponseEntity<String> entity2 = postLink("http://example.com/");
 		ReadContext rc = JsonPath.parse(entity2.getBody());
 		ResponseEntity<String> entity = restTemplate.getForEntity( "/"+rc.read("$.hash"), String.class);
