@@ -13,6 +13,9 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 import static urlshortener.blacklodge.repository.Fixture.ShortURLFixtureTest.url1;
 import static urlshortener.blacklodge.repository.Fixture.ShortURLFixtureTest.url2;
 
+/**
+ * Tests for the Short URL repo
+ */
 public class ShortURLRepoTest {
 
     private EmbeddedDatabase db;
@@ -27,7 +30,9 @@ public class ShortURLRepoTest {
         repository = new ShortURLRepo(jdbc);
     }
 
-
+    /**
+     * Tests that saving a URL is persistent
+     */
     @Test
     public void thatSavePersistsTheShortURL() {
         assertNotNull(repository.save(url1()));
@@ -35,6 +40,9 @@ public class ShortURLRepoTest {
                 Integer.class), 1);
     }
 
+    /**
+     * Tests that saving a duplicated hash returns a null and doesn't save anything
+     */
     @Test
     public void thatSaveADuplicateHashIsSafelyIgnored() {
         repository.save(url1());
@@ -43,6 +51,9 @@ public class ShortURLRepoTest {
                 Integer.class), 1);
     }
 
+    /**
+     * Tests that search by key works as expected
+     */
     @Test
     public void thatFindByKeyReturnsAURL() {
         ShortURL su = repository.save(url1());
