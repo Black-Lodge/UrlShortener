@@ -82,35 +82,35 @@ public class InfoCollector {
 		}
 	    int clicks;
 		try {
-			clicks = ((Double) result.get("gauge.clicks")).intValue();
+			clicks = ((Double) result.get("gauge.servo.clicks")).intValue();
 		} catch (JSONException e) {
 			logger.error("Can't read metrics.clicks");
 			clicks= 0;
 		}
 	    int uris;
 		try {
-			uris = ((Double) result.get("gauge.uris")).intValue();
+			uris = ((Double) result.get("gauge.servo.uris")).intValue();
 		} catch (JSONException e) {
 			logger.error("Can't read metrics.uris");
 			uris= 0;
 		}
 		int users;
 		try {
-			users = ((Double) result.get("gauge.users")).intValue();
+			users = ((Double) result.get("gauge.servo.users")).intValue();
 		} catch (JSONException e) {
 			logger.error("Can't read metrics.users");
 			users= 0;
 		}
 		int lastPetition;
 		try {
-			lastPetition = ((Double) result.get("gauge.lastPetition")).intValue();
+			lastPetition = ((Double) result.get("gauge.servo.lastpetition")).intValue();
 		} catch (JSONException e) {
 			logger.error("Can't read metrics.lastPetition");
 			lastPetition= 0;
 		}
 		int lastRedirection;
 		try {
-			lastRedirection = ((Double) result.get("gauge.lastRedirection")).intValue();
+			lastRedirection = ((Double) result.get("gauge.servo.lastredirection")).intValue();
 		} catch (JSONException e) {
 			logger.error("Can't read metrics.lastRedirection");
 			lastRedirection= 0;
