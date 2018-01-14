@@ -2,6 +2,7 @@ package urlshortener.blacklodge.routing;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,15 +15,28 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import urlshortener.blacklodge.Application;
+import urlshortener.blacklodge.repository.ShortURLRepo;
+import urlshortener.common.repository.ShortURLRepository;
+import urlshortener.common.repository.ShortURLRepositoryImpl;
 
+/**
+ * Tests Apache Camel Route
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class routerTest {
 
     @Autowired
     ProducerTemplate producertemplate;
+
+    @Autowired
+    ShortURLRepo repo;
+
+    /**
+     * Checks that urls from csv are stored correctly on the database
+     */
     @Test
-    public void routinhTest() throws Exception {
+    public void routingTest() {
         String filecontent = "https://google.com\nhttp://moodle.unizar.com\n";
         MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
                 "multipart/form-data", filecontent.getBytes());
@@ -31,9 +45,17 @@ public class routerTest {
 
         headers.put("sponsor", "q"); 
         headers.put("owner", "e"); 
-        headers.put("ip", "e"); 
+        headers.put("ip", "e");
 
-        producertemplate.sendBodyAndHeaders("direct:processCSV", multipartFile.getInputStream(), headers);
+        try {
+            producertemplate.sendBodyAndHeaders("direct:processCSV", multipartFile.getInputStream(), headers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        assertEquals(2L,(long)repo.count());
+
     }
     
 
