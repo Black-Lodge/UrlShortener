@@ -31,6 +31,7 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UrlShortenerControllerWithLogs.class);
 	
+	
 	private static Set<String> ips = new HashSet<String>() ;
 	
 	private final GaugeService gaugeService;
