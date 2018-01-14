@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.camel.ProducerTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import urlshortener.blacklodge.Application;
 import urlshortener.blacklodge.repository.ShortURLRepo;
-import urlshortener.common.repository.ShortURLRepository;
-import urlshortener.common.repository.ShortURLRepositoryImpl;
+
 
 /**
  * Tests Apache Camel Route
@@ -26,37 +23,36 @@ import urlshortener.common.repository.ShortURLRepositoryImpl;
 @SpringBootTest(classes = Application.class)
 public class routerTest {
 
-    @Autowired
-    ProducerTemplate producertemplate;
+  @Autowired
+  ProducerTemplate producertemplate;
 
-    @Autowired
-    ShortURLRepo repo;
+  @Autowired
+  ShortURLRepo repo;
 
-    /**
-     * Checks that urls from csv are stored correctly on the database
-     */
-    @Test
-    public void routingTest() {
-        String filecontent = "https://google.com\nhttp://moodle.unizar.com\n";
-        MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
-                "multipart/form-data", filecontent.getBytes());
-        
-        Map<String, Object> headers = new HashMap<String,Object>(); 
+  /**
+   * Checks that urls from csv are stored correctly on the database
+   */
+  @Test
+  public void routingTest() {
+    String filecontent = "https://google.com\nhttp://moodle.unizar.com\n";
+    MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
+            "multipart/form-data", filecontent.getBytes());
 
-        headers.put("sponsor", "q"); 
-        headers.put("owner", "e"); 
-        headers.put("ip", "e");
+    Map<String, Object> headers = new HashMap<String,Object>();
 
-        try {
-            producertemplate.sendBodyAndHeaders("direct:processCSV", multipartFile.getInputStream(), headers);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    headers.put("sponsor", "q");
+    headers.put("owner", "e");
+    headers.put("ip", "e");
 
-
-        assertEquals(2L,(long)repo.count());
-
+    try {
+      producertemplate.sendBodyAndHeaders("direct:processCSV", multipartFile.getInputStream(), headers);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    
+
+    assertEquals(2L,(long)repo.count());
+
+  }
+
 
 }
