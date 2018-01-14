@@ -40,36 +40,38 @@ public class CSVprocessor implements Processor {
      * Processes a line of the CSV file
      */
     public void process(Exchange exchange) {
+      List<String> url = exchange.getIn().getBody(List.class);
+      String sponsor = (String) exchange.getIn().getHeader("sponsor");
+      String owner = (String) exchange.getIn().getHeader("owner");
+      String ip = (String) exchange.getIn().getHeader("ip");
+      
       try {
-          List<String> url = exchange.getIn().getBody(List.class);
-          
-          if (url.size() == 1) {
-              Pattern pattern = Pattern.compile(".*http://.*");
-              Pattern pattern2 = Pattern.compile(".*https://.*");
-
-              Matcher matcher = pattern.matcher(url.get(0));
-              Matcher matcher2 = pattern2.matcher(url.get(0));
-          
-              if (matcher.matches() || matcher2.matches()) {
-                  String sponsor = (String) exchange.getIn().getHeader("sponsor");
-                  String owner = (String) exchange.getIn().getHeader("owner");
-                  String ip = (String) exchange.getIn().getHeader("ip");
+          if (url.get(0).matches("^(http|https)://[^\\s\\t]*$")) {  
+              ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
                   
-                  ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
-                  
-                  logger.info(shortUrl.getHash());
+              //logger.info(shortUrl.getHash());
             
-                  exchange.getIn().setBody(shortUrl);
-                  CsvResponse cr = new CsvResponse(url.get(0),
-                          linkTo(methodOn(UrlShortenerControllerWithLogs.class).redirectTo(shortUrl.getHash(), null)).toString()
-                          ,true
-                          ,null);
-                  template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);   
-              }
+              exchange.getIn().setBody(shortUrl);
+              CsvResponse cr = new CsvResponse(url.get(0),
+                      linkTo(methodOn(UrlShortenerControllerWithLogs.class).redirectTo(shortUrl.getHash(), null)).toString()
+                      ,true
+                      ,null);
+              template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);   
+          } else {
+              CsvResponse cr = new CsvResponse(url.get(0),
+                      null
+                      ,false
+                      ,"Bad format");
+              template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);  
           }
 
       } catch (Exception e){
           logger.error("Failed for csv line. Error: {}", e.getMessage());
+          CsvResponse cr = new CsvResponse(url.get(0),
+                  null
+                  ,false
+                  ,"URL not valid, safe or cannot connect");
+          template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);
       }
    }
 }
