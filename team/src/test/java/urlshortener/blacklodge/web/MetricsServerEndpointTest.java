@@ -87,19 +87,23 @@ public class MetricsServerEndpointTest {
 	                                                    new WebSocketTransport(new StandardWebSocketClient()))));
 	    }
 
-	   
+        /**
+        * Checks that metrics can be retrieved
+        */
 		@Test(timeout = 120000)
-		public void testGetMetrics() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
+		public void testGetMetrics() {
 		   ResponseEntity<String> entity = restTemplate. getForEntity("/metrics", String.class);
 		   String json = entity.getBody();
 		   assertTrue(json.length()>0);
 		}
-		
-		@Test(timeout = 120000)
-		public void testGetSpecialMetrics() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-		 
 
-		    String hash = JsonPath.parse(postLink("http://www.google.es/").getBody()).read("$.hash");
+    /**
+     * Checks that metrics are updated after shortening a URL and after using the shortened URL
+     */
+		@Test(timeout = 120000)
+		public void testGetSpecialMetrics() {
+		 
+	    	String hash = JsonPath.parse(postLink("http://www.google.es/").getBody()).read("$.hash");
 		    
 			
 		   ResponseEntity<String> entity = restTemplate.getForEntity("/metrics", String.class);
@@ -114,7 +118,7 @@ public class MetricsServerEndpointTest {
 		    assertTrue(p!= null);
 		    int uris = 0;
 		    try {
-				uris = p.getInt("gauge.uris");
+				uris = p.getInt("gauge.servo.uris");
 			} catch (JSONException e) {
 				
 			}
@@ -138,7 +142,7 @@ public class MetricsServerEndpointTest {
 			    assertTrue(p!= null);
 			    int clicks = 0;
 			    try {
-			    	clicks = p.getInt("gauge.clicks");
+			    	clicks = p.getInt("gauge.servo.clicks");
 			    	logger.info("Test p "+p);
 				} catch (JSONException e) {
 					
@@ -146,7 +150,13 @@ public class MetricsServerEndpointTest {
 			    
 			   assertTrue(clicks == 1);
 		}
-		
+
+	/**
+	 * Checks if websockets connections work as expected
+	 * @throws InterruptedException stomp exception
+	 * @throws TimeoutException stomp exception
+	 * @throws ExecutionException stomp exception
+	 */
 		@Test(timeout = 150000)
 		public void testWebsocket() throws InterruptedException, TimeoutException, ExecutionException {
 
@@ -156,17 +166,6 @@ public class MetricsServerEndpointTest {
             Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
 		}
 
-		@Test
-		public void testPrivateWebsocket() throws InterruptedException, ExecutionException, TimeoutException {
-			StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
-					.get(10,SECONDS);
-			session.subscribe("/user/queue/messages", new DefaultStompFrameHandler());
-			session.send("/app/test","Hi".getBytes());
-			Assert.assertEquals("hi",blockingQueue.poll(2,SECONDS));
-		}
-		
-		
-		
 		private ResponseEntity<String> postLink(String url) {
 			MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
 			parts.add("url", url);
