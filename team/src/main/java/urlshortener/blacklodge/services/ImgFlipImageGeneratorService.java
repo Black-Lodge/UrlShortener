@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -53,6 +54,12 @@ public class ImgFlipImageGeneratorService implements MemeImageGeneratorService{
         RestTemplate restTemplate = new RestTemplate();
         
         try {
+        	restTemplate.setRequestFactory(new SimpleClientHttpRequestFactory());
+            SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) restTemplate
+                    .getRequestFactory();
+            rf.setReadTimeout(10*1000);
+            rf.setConnectTimeout(10*1000);
+        		    
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
