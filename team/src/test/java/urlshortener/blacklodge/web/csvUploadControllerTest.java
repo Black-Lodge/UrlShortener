@@ -20,13 +20,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import org.springframework.web.context.WebApplicationContext;
 
+import urlshortener.blacklodge.Application;
 import urlshortener.blacklodge.repository.ShortURLRepo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= RANDOM_PORT)
+@SpringBootTest(webEnvironment= RANDOM_PORT, classes = Application.class)
 @DirtiesContext
 public class csvUploadControllerTest {
 
