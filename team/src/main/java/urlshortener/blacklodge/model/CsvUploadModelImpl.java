@@ -52,18 +52,6 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     * @return The identifier to find the shortened URLs
     */
 	public String csvUpload(MultipartFile file, String sponsor, String owner, String ip) {
-        /*
-        List<String> urls = processCSV.processCSV(file);
-
-        List<ShortURL> urlsShortened = new ArrayList<>();
-        
-        ShortURL shortened;
-        
-        for (int i = 0; i < urls.size(); i++) {
-            shortened = urlShortenerModel.shorten(urls.get(i), sponsor, owner, ip);
-            
-            if (shortened != null) urlsShortened.add(shortened);
-        }*/
         
         Map<String, Object> headers = new HashMap<String,Object>(); 
 
@@ -73,16 +61,11 @@ public class CsvUploadModelImpl implements CsvUploadModel {
 
         try {
             producertemplate.sendBodyAndHeaders("direct:processCSV", file.getInputStream(), headers);
-        } catch (CamelExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Failed to process csv {}. Error: {}", file.getOriginalFilename(), e.getMessage());
         }
         
-        // TODO: Retorna una direccion
-        return null;
+        return owner;
     }
     /**
      * Returns the shortened URLs of a given owner
