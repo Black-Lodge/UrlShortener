@@ -3,6 +3,8 @@ package urlshortener.blacklodge.model;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import urlshortener.blacklodge.csv.CsvResponse;
 import urlshortener.common.domain.ShortURL;
 
 /**
@@ -18,11 +20,11 @@ public interface CsvUploadModel {
      * @return Identifier of the shortened URLs
      */
     String csvUpload(MultipartFile file, String sponsor, String owner, String ip);
+
     /**
      * Returns the shortened URLs of a given owner
      * @param owner Owner of the shortened URLs
      * @return CSV with the shortened URLs
      */
-    MultipartFile getResult(String owner);
-    
+    List<CsvResponse> getResult(String owner);
 }
