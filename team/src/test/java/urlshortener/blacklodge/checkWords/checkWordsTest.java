@@ -12,6 +12,9 @@ import urlshortener.blacklodge.services.CheckWordsServiceImpl;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+/**
+ * Tests the check words service
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= RANDOM_PORT)
 public class checkWordsTest {
@@ -19,44 +22,36 @@ public class checkWordsTest {
     @Autowired
     CheckWordsService checkWordsService;
 
-    @Test
-    public void checkBadWord() {
-        CheckWordsService test = new checkWordsForTesting();
-        assertEquals(true,test.check("fuck"));
-    }
-
-    @Test
-    public void checkSafeWord() {
-        CheckWordsService test = new checkWordsForTesting();
-        assertEquals(false,test.check("you"));
-    }
-
+    /**
+     * Checks that given a url that contains an offensive word, detects that it is offensive
+     */
     @Test
     public void checkBadURL() {
-        CheckWordsService test = new checkWordsForTesting();
-        assertEquals(true,test.check("https://mydomain.com/fuck"));
+        assertEquals(true,checkWordsService.check("https://mydomain.com/fuck"));
     }
 
+    /**
+     * Checks that given a non offensive url, no offensive words are detected
+     */
     @Test
     public void checkSafeURL() {
-        CheckWordsService test = new checkWordsForTesting();
-        assertEquals(false,test.check("https://mydomain.com/hi/test"));
+        assertEquals(false,checkWordsService.check("https://mydomain.com/hi/test"));
     }
 
+    /**
+     * Checks that given a non offensive word, is detected as so
+     */
     @Test
-    public void checkRealSafe() {
+    public void checkRealSafeWord() {
         assertEquals(false,checkWordsService.check("you"));
     }
 
+    /**
+     * Checks that given an offensive word, is detected as so
+     */
     @Test
-    public void checkRealWrong() {
+    public void checkRealWrongWord() {
         assertEquals(true,checkWordsService.check("fuck"));
     }
 
-
-    private static class checkWordsForTesting implements CheckWordsService {
-        public boolean check(String query) {
-            return query.contains("fuck");
-        }
-    }
 }
