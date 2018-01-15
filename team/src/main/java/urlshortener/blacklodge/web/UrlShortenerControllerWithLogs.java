@@ -75,9 +75,14 @@ public class UrlShortenerControllerWithLogs extends UrlShortenerController {
 		
 		long end = System.currentTimeMillis()-start;
 		this.gaugeService.submit("lastRedirection", end);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location", "/ads/"+id);
-		return new ResponseEntity<String>(headers,HttpStatus.TEMPORARY_REDIRECT);
+		switch (a.getStatusCode()) {
+		case TEMPORARY_REDIRECT:
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Location", "/ads/"+id);
+			return new ResponseEntity<String>(headers,HttpStatus.TEMPORARY_REDIRECT);
+		default:
+			return a;
+		}
 	}
 
 	/**
