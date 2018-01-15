@@ -25,34 +25,34 @@ import urlshortener.blacklodge.model.CsvUploadModel;
 
 @RestController
 public class CsvController {
-	private static final Logger logger = LoggerFactory.getLogger(CsvController.class);
-	
-	@Autowired
-	CsvUploadModel csv;
-	
-	@RequestMapping(value = "/uploadFile/{userkey}" , method = RequestMethod.POST)
-	public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file, HttpServletRequest request) {
-		logger.info("Detected upload file userkey: "+userkey );
-		csv.csvUpload(file, "Random", userkey,request.getRemoteAddr());
-		logger.info("CsvController ip: "+request.getRemoteAddr() );
-		return new ResponseEntity<>("http://localhost:8080/csv/"+userkey+"/", HttpStatus.CREATED);
-	}
-	
-	@RequestMapping(value = "/csv/{userkey}" , method = RequestMethod.GET)
-	public ResponseEntity<List<CsvResponse>> get(@PathVariable String userkey, ModelMap modelMap) {
-		logger.info("Detected upload file userkey: "+userkey );
-		List<CsvResponse> f = csv.getResult(userkey);
-		if (f != null) {
-			return new ResponseEntity<>(f, HttpStatus.FOUND);
-		}else {
-			return new ResponseEntity<>((List<CsvResponse>) null, HttpStatus.BAD_REQUEST);
-		}
-		
-	}
-	
-	@SubscribeMapping("/topic/uploadFile/{userkey}/")
-    public void connectionOpened(@DestinationVariable String userkey) {
-        logger.info("Detected subscription to csv with user "+userkey);
-       
+  private static final Logger logger = LoggerFactory.getLogger(CsvController.class);
+
+  @Autowired
+  CsvUploadModel csv;
+
+  @RequestMapping(value = "/uploadFile/{userkey}" , method = RequestMethod.POST)
+  public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file, HttpServletRequest request) {
+    logger.info("Detected upload file userkey: "+userkey );
+    csv.csvUpload(file, "Random", userkey,request.getRemoteAddr());
+    logger.info("CsvController ip: "+request.getRemoteAddr() );
+    return new ResponseEntity<>("http://localhost:8080/csv/"+userkey+"/", HttpStatus.CREATED);
+  }
+
+  @RequestMapping(value = "/csv/{userkey}" , method = RequestMethod.GET)
+  public ResponseEntity<List<CsvResponse>> get(@PathVariable String userkey, ModelMap modelMap) {
+    logger.info("Detected upload file userkey: "+userkey );
+    List<CsvResponse> f = csv.getResult(userkey);
+    if (f != null) {
+      return new ResponseEntity<>(f, HttpStatus.FOUND);
+    }else {
+      return new ResponseEntity<>((List<CsvResponse>) null, HttpStatus.BAD_REQUEST);
     }
+
+  }
+
+  @SubscribeMapping("/topic/uploadFile/{userkey}/")
+  public void connectionOpened(@DestinationVariable String userkey) {
+    logger.info("Detected subscription to csv with user "+userkey);
+
+  }
 }

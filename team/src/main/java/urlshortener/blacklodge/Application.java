@@ -7,25 +7,28 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
-@EnableFeignClients
-@EnableCircuitBreaker
-@SpringBootApplication
 /**
  * Main class from the project. It launchs the application
  * Annotations
  * SpringBootApplication: As seen on the first lab
  * EnableFeignClients, EnableCircuitBreaker: To enable Feign clients and its functionality
  */
+@EnableFeignClients
+@EnableCircuitBreaker
+@SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-	
-	
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(Application.class, args);
-	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(Application.class);
-	}
+  /**
+   * Main method from the project. It starts all services
+   * @param args Args for the program
+   */
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    return application.sources(Application.class);
+  }
 
 }
