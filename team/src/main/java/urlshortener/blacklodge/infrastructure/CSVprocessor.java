@@ -62,7 +62,7 @@ public class CSVprocessor implements Processor {
       String ip = (String) exchange.getIn().getHeader("ip");
       
       try {
-          if (url.get(0).matches("^(http|https)://[^\\s\\t]*$")) {  
+          if (url.size() == 1 && url.get(0).matches("^(http|https)://[^\\s\\t]*$")) {  
         	  //Time to respond the last petition 
         	 long start = System.currentTimeMillis();
               ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
@@ -85,7 +85,16 @@ public class CSVprocessor implements Processor {
               logger.info("Requested new short for uri " + url);
       		 
           } else {
-              CsvResponse cr = new CsvResponse(url.get(0),
+              String ss = "";
+              for (String s:url) {
+                  if (ss == "") {
+                      ss = s;
+                  } else {
+                      ss = ss + "," + s; 
+                  }
+                  
+              }
+              CsvResponse cr = new CsvResponse(ss,
                       null
                       ,false
                       ,"Bad format");
@@ -94,6 +103,7 @@ public class CSVprocessor implements Processor {
 
       } catch (Exception e){
           logger.error("Failed for csv line. Error: {}", e.getMessage());
+          
           CsvResponse cr = new CsvResponse(url.get(0),
                   null
                   ,false
