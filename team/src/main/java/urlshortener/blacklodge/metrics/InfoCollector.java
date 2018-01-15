@@ -56,56 +56,56 @@ public class InfoCollector {
     try {
       time = (Integer) result.get("uptime");
     } catch (JSONException e) {
-      logger.error("Can't read metrics.time");
+      logger.info("Can't read metrics.time");
       time= 0;
     }
     int available;
     try {
       available = (Integer) result.get("mem.free");
     } catch (JSONException e) {
-      logger.error("Can't read metrics.available");
+      logger.info("Can't read metrics.available");
       available= 0;
     }
     int used;
     try {
       used = (Integer) result.get("mem") - available;
     } catch (JSONException e) {
-      logger.error("Can't read metrics.used");
+      logger.info("Can't read metrics.used");
       used= 0;
     }
     int clicks;
     try {
       clicks = ((Double) result.get("gauge.servo.clicks")).intValue();
     } catch (JSONException e) {
-      logger.error("Can't read metrics.clicks");
+      logger.info("Can't read metrics.clicks");
       clicks= 0;
     }
     int uris;
     try {
       uris = ((Double) result.get("gauge.servo.uris")).intValue();
     } catch (JSONException e) {
-      logger.error("Can't read metrics.uris");
+      logger.info("Can't read metrics.uris");
       uris= 0;
     }
     int users;
     try {
       users = ((Double) result.get("gauge.servo.users")).intValue();
     } catch (JSONException e) {
-      logger.error("Can't read metrics.users");
+      logger.info("Can't read metrics.users");
       users= 0;
     }
     int lastPetition;
     try {
       lastPetition = ((Double) result.get("gauge.servo.lastpetition")).intValue();
     } catch (JSONException e) {
-      logger.error("Can't read metrics.lastPetition");
+      logger.info("Can't read metrics.lastPetition");
       lastPetition= 0;
     }
     int lastRedirection;
     try {
       lastRedirection = ((Double) result.get("gauge.servo.lastredirection")).intValue();
     } catch (JSONException e) {
-      logger.error("Can't read metrics.lastRedirection");
+      logger.info("Can't read metrics.lastRedirection");
       lastRedirection= 0;
     }
     return new GlobalInformation(time,users,uris,clicks,lastRedirection,lastPetition,used,available);
