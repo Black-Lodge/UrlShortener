@@ -34,7 +34,7 @@ public class CsvController {
   public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file, HttpServletRequest request) {
     logger.info("Detected upload file userkey: "+userkey );
     csv.csvUpload(file, "Random", userkey,request.getRemoteAddr());
-    logger.info("CsvController ip: "+request.getRemoteAddr() );
+    logger.debug("CsvController ip: "+request.getRemoteAddr() );
     return new ResponseEntity<>("http://localhost:8080/csv/"+userkey+"/", HttpStatus.CREATED);
   }
 

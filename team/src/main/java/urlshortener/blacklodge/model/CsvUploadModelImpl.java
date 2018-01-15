@@ -52,7 +52,7 @@ public class CsvUploadModelImpl implements CsvUploadModel {
     headers.put("sponsor", sponsor);
     headers.put("owner", owner);
     headers.put("ip", ip);
-    logger.info("ip on csvUpload: "+ip);
+    logger.debug("ip on csvUpload: "+ip);
     try {
       producertemplate.sendBodyAndHeaders("direct:processCSV", file.getInputStream(), headers);
     } catch (Exception e) {

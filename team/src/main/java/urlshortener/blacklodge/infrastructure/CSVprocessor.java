@@ -59,7 +59,7 @@ public class CSVprocessor implements Processor {
         long start = System.currentTimeMillis();
         ShortURL shortUrl = urlShortenermodel.shorten(url.get(0), sponsor, owner, ip);
 
-        //logger.info(shortUrl.getHash());
+        //logger.debug(shortUrl.getHash());
 
         exchange.getIn().setBody(shortUrl);
         CsvResponse cr = new CsvResponse(url.get(0),
@@ -72,8 +72,8 @@ public class CSVprocessor implements Processor {
         this.gaugeService.submit("lastPetition", end);
         ips.add(ip);
         this.gaugeService.submit("users", ips.getNumber());
-        logger.info("Ip de process: "+ ip);
-        logger.info("Requested new short for uri " + url);
+        logger.debug("Ip de process: "+ ip);
+        logger.debug("Requested new short for uri " + url);
 
       } else {
         String ss = "";
