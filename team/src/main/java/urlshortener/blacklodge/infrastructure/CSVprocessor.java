@@ -85,7 +85,7 @@ public class CSVprocessor implements Processor {
           }          
         }
 
-        CsvResponse cr = new CsvResponse(url.get(0),
+        CsvResponse cr = new CsvResponse(ss,
                 null
                 ,false
                 ,"Bad format");
