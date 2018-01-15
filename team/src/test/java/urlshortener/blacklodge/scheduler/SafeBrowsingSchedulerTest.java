@@ -35,7 +35,8 @@ public class SafeBrowsingSchedulerTest {
    */
   @Test
   public void checkSafeFalseToTrue() throws URISyntaxException {
-    ShortURL su = new ShortURL("hash", "http://google.com", new URI("http://localhost:8080/such_1_so_2"), "q", new Date(System.currentTimeMillis()) ,
+    ShortURL su = new ShortURL("hash", "http://google.com", new URI("http://localhost:8080/such_1_so_2"),
+            "q", new Date(System.currentTimeMillis()) ,
             "test", HttpStatus.TEMPORARY_REDIRECT.value(), false, "test", null, "test");
     assertFalse(su.getSafe().booleanValue());
     shortUrlRepository.save(su);

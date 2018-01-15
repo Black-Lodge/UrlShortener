@@ -114,7 +114,8 @@ public class AdsControllerTest {
     ReadContext rc = JsonPath.parse(entity2.getBody());
     String id = rc.read("$.hash").toString();
 
-    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets",
+            new StompSessionHandlerAdapter() {})
             .get(10,SECONDS);
     session.subscribe("/topic/ads/"+id+"/12345678/", new DefaultStompFrameHandler());
 

@@ -128,7 +128,8 @@ public class MetricsServerEndpointTest {
    */
   @Test(timeout = 150000)
   public void testWebsocket() throws InterruptedException, TimeoutException, ExecutionException {
-    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets",
+            new StompSessionHandlerAdapter() {})
             .get(10,SECONDS);
     session.subscribe(WEBSOCKET_TOPIC, new DefaultStompFrameHandler());
     Assert.assertEquals("hi",blockingQueue.poll(1,SECONDS));
