@@ -111,7 +111,7 @@ public class UrlShortenerModelImpl implements UrlShortenerModel {
       }
       return result;
     } else {
-      logger.error("Shorten URL failed for url: {}. Error: {}", url, "failed");
+      logger.error("Shorten URL failed for url: {}. Error: {}", url, "URL not valid, safe or cannot connect");
       return null;
     }
   }

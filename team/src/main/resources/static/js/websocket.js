@@ -112,7 +112,7 @@ $(function(){
 			processData: false
 		})
 		.done(function(res){
-			$("#mensaje").html("<h3>Direccion del recurso para obtener los resultados</h3><p><a target='_blank' href='"+res+"'>"+res+"</a><p>");
+			$("#mensaje").html("<h3>Dirección del recurso para obtener los resultados</h3><p><a target='_blank' href='"+res+"'>"+res+"</a><p>");
 		});
 	});
 	
