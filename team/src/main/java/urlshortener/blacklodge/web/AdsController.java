@@ -1,9 +1,7 @@
 package urlshortener.blacklodge.web;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +57,7 @@ public class AdsController {
   public void updateCountdown() {
     //Update people waiting for ads
     Set<String> codes = countdowns.keySet();
+    List<String> remove = new LinkedList<>();
     for (String code : codes) {
       String id = code.split("/")[0];
       Integer result = countdowns.get(code) -1;
@@ -66,12 +65,17 @@ public class AdsController {
         logger.info("Sending real url to client "+code);
         this.template.convertAndSend("/topic/ads/"+code+"/",
                 new AdsResponse(result,sr.findByKey(id).getTarget().toString()));
-        countdowns.remove(code);
+        remove.add(code);
       }else {
         this.template.convertAndSend("/topic/ads/"+code+"/",  new AdsResponse(result,null));
         countdowns.put(code, result);
       }
     }
+
+    for (String toRemove: remove) {
+      countdowns.remove(toRemove);
+    }
+
   }
 
   /**
