@@ -81,8 +81,8 @@ public class CSVprocessor implements Processor {
           if (ss == "") {
             ss = s;
           } else {
-            ss = ss + "," + s; 
-          }          
+            ss = ss + "," + s;
+          }
         }
 
         CsvResponse cr = new CsvResponse(ss,
@@ -101,4 +101,5 @@ public class CSVprocessor implements Processor {
       template.convertAndSend("/topic/uploadFile/"+owner+"/",cr);
     }
   }
+  
 }
