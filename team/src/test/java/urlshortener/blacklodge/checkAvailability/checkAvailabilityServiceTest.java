@@ -41,4 +41,5 @@ public class checkAvailabilityServiceTest {
     checkResult = checkAvailabilityService.check("https://examplefailsecure.com");
     assertEquals(false,checkResult);
   }
+
 }

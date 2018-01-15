@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-
 import java.util.concurrent.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +33,9 @@ import com.jayway.jsonpath.JsonPath;
 import urlshortener.blacklodge.Application;
 import java.lang.reflect.Type;
 
+/**
+ * Tests that the metrics endpoint works as expected
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @DirtiesContext
@@ -50,6 +52,9 @@ public class MetricsServerEndpointTest {
   BlockingQueue<String> blockingQueue;
   WebSocketStompClient stompClient;
 
+  /**
+   * Prepares system for testing
+   */
   @Before
   public void setup() {
     blockingQueue = new LinkedBlockingDeque<>();
@@ -135,6 +140,9 @@ public class MetricsServerEndpointTest {
     return restTemplate.postForEntity("/link", parts, String.class);
   }
 
+  /**
+   * Class that helps testing websockets connections
+   */
   private class MyHandler extends StompSessionHandlerAdapter {
 
     public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
@@ -142,6 +150,10 @@ public class MetricsServerEndpointTest {
     }
 
   }
+
+  /**
+   * Class used to test websockets connections, including messages exchanged
+   */
   class DefaultStompFrameHandler implements StompFrameHandler {
     @Override
     public Type getPayloadType(StompHeaders stompHeaders) {

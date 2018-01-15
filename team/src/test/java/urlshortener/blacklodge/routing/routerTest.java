@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import urlshortener.blacklodge.Application;
 import urlshortener.blacklodge.repository.ShortURLRepo;
 
-
 /**
  * Tests Apache Camel Route
  */
@@ -53,6 +52,5 @@ public class routerTest {
     assertEquals(2L,(long)repo.count());
 
   }
-
 
 }

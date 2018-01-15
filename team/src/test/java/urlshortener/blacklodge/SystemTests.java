@@ -88,12 +88,15 @@ public class SystemTests {
 
   }
 
+  /**
+   * Sends a post petition to /link
+   * @param url URL to send
+   * @return What is returned after a POST message has been sent
+   */
   private ResponseEntity<String> postLink(String url) {
     MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
     parts.add("url", url);
     return restTemplate.postForEntity("/link", parts, String.class);
   }
-
-
 
 }

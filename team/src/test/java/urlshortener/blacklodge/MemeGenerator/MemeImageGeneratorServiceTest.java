@@ -30,4 +30,5 @@ public class MemeImageGeneratorServiceTest {
     assertNotNull(image_url);
     assertNotEquals("https://i.imgflip.com/20tzw3.jpg", image_url);
   }
+
 }

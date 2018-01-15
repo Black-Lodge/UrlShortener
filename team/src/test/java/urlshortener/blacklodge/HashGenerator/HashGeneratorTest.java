@@ -19,6 +19,7 @@ public class HashGeneratorTest {
 
   @Autowired
   HashGeneratorService function;
+
   /**
    * Check that the hashing function is consistent
    */
@@ -28,4 +29,5 @@ public class HashGeneratorTest {
     Long list2 = function.hash("https://www.google.es");
     assertEquals(list2.intValue(),list.intValue());
   }
+
 }
