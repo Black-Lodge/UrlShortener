@@ -22,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import urlshortener.blacklodge.csv.CsvResponse;
 import urlshortener.blacklodge.model.CsvUploadModel;
 
-
+/**
+ * Class that represents the CSV controller, used to work with CSV files
+ */
 @RestController
 public class CsvController {
   private static final Logger logger = LoggerFactory.getLogger(CsvController.class);
@@ -30,6 +32,13 @@ public class CsvController {
   @Autowired
   CsvUploadModel csv;
 
+  /**
+   * Shortens the URL in the csv file provided
+   * @param userkey Unique key to identify user
+   * @param file File with URLs to be shortened
+   * @param request HTTP request
+   * @return The link where shortened URLs can be found
+   */
   @RequestMapping(value = "/uploadFile/{userkey}" , method = RequestMethod.POST)
   public ResponseEntity<String> submit(@PathVariable String userkey,@RequestParam("csv") MultipartFile file, HttpServletRequest request) {
     logger.info("Detected upload file userkey: "+userkey );
@@ -38,6 +47,12 @@ public class CsvController {
     return new ResponseEntity<>("http://localhost:8080/csv/"+userkey+"/", HttpStatus.CREATED);
   }
 
+  /**
+   * Returns the list of shortened URLs, given the key
+   * @param userkey User key to identify
+   * @param modelMap Model
+   * @return The list of shortened URLs
+   */
   @RequestMapping(value = "/csv/{userkey}" , method = RequestMethod.GET)
   public ResponseEntity<List<CsvResponse>> get(@PathVariable String userkey, ModelMap modelMap) {
     logger.info("Detected upload file userkey: "+userkey );
@@ -50,6 +65,10 @@ public class CsvController {
 
   }
 
+  /**
+   * Aux method to detect opened connections
+   * @param userkey Key of the opened connection
+   */
   @SubscribeMapping("/topic/uploadFile/{userkey}/")
   public void connectionOpened(@DestinationVariable String userkey) {
     logger.info("Detected subscription to csv with user "+userkey);
