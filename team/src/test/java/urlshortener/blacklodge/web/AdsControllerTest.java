@@ -1,6 +1,5 @@
 package urlshortener.blacklodge.web;
 
-
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -48,6 +47,9 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import urlshortener.blacklodge.Application;
 
+/**
+ * Tests that the ads controller works as expected
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @DirtiesContext
@@ -71,6 +73,9 @@ public class AdsControllerTest {
   BlockingQueue<String> blockingQueue;
   WebSocketStompClient stompClient;
 
+  /**
+   * Prepares the setup required for testing
+   */
   @Before
   public void setup() {
     blockingQueue = new LinkedBlockingDeque<>();
@@ -80,7 +85,10 @@ public class AdsControllerTest {
     this.mockMvc = builder.build();
   }
 
-
+  /**
+   * Checks that after creating a short URL, the ad page can be reached
+   * @throws Exception Exception from MockMvc
+   */
   @Test
   public void testRedirectWithAds() throws Exception {
     ResponseEntity<String> entity2 = postLink("http://www.google.es/");
@@ -94,13 +102,20 @@ public class AdsControllerTest {
             .andExpect(ok);
   }
 
+  /**
+   * Checks that the original URL is sent after 10 seconds
+   * @throws InterruptedException Blocking Queue exception
+   * @throws ExecutionException Another blocking queue exception
+   * @throws TimeoutException Another blocking queue exception
+   */
   @Test
-  public void testCountDown() throws DeploymentException, IOException, URISyntaxException, InterruptedException, ExecutionException, TimeoutException {
+  public void testCountDown() throws InterruptedException, ExecutionException, TimeoutException {
     ResponseEntity<String> entity2 = postLink("http://www.google.es/");
     ReadContext rc = JsonPath.parse(entity2.getBody());
     String id = rc.read("$.hash").toString();
 
-    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets", new StompSessionHandlerAdapter() {})
+    StompSession session = stompClient.connect("http://localhost:"+port+"/websockets",
+            new StompSessionHandlerAdapter() {})
             .get(10,SECONDS);
     session.subscribe("/topic/ads/"+id+"/12345678/", new DefaultStompFrameHandler());
 
@@ -115,12 +130,20 @@ public class AdsControllerTest {
 
   }
 
+  /**
+   * Sends a POST message with the url given to /link
+   * @param url URL to be sent
+   * @return Server answers after sending a POST message to /link
+   */
   private ResponseEntity<String> postLink(String url) {
     MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
     parts.add("url", url);
     return restTemplate.postForEntity("/link", parts, String.class);
   }
 
+  /**
+   * Class used to test websockets operations
+   */
   class DefaultStompFrameHandler implements StompFrameHandler {
     @Override
     public Type getPayloadType(StompHeaders stompHeaders) {

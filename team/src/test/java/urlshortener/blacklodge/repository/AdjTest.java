@@ -55,4 +55,5 @@ public class AdjTest {
   public void shutdown() {
     db.shutdown();
   }
+
 }

@@ -10,7 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import urlshortener.blacklodge.Application;
 import urlshortener.blacklodge.services.SafeBrowsingService;
 
-
 /**
  * Class that tests that the Safe Browsing Service works as expected
  */
@@ -36,4 +35,5 @@ public class SafeBrowsingServiceTest {
     boolean lookupResult = safeBrowsingService.checkSafetyUrl("http://malware.testing.google.test/testing/malware/");
     assertEquals(false,lookupResult);
   }
+
 }

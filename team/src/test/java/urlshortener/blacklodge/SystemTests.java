@@ -53,7 +53,8 @@ public class SystemTests {
    */
   @Test
   public void testCss() {
-    ResponseEntity<String> entity = restTemplate.getForEntity("/webjars/bootstrap/3.3.5/css/bootstrap.min.css", String.class);
+    ResponseEntity<String> entity = restTemplate.getForEntity("/webjars/bootstrap/3.3.5/css/bootstrap.min.css",
+            String.class);
     assertThat(entity.getStatusCode(), is(HttpStatus.OK));
     assertThat(entity.getHeaders().getContentType(), is(MediaType.valueOf("text/css")));
     assertThat(entity.getBody(), containsString("body"));
@@ -67,7 +68,8 @@ public class SystemTests {
     ResponseEntity<String> entity = postLink("http://example.com/");
     assertThat(entity.getStatusCode(), is(HttpStatus.CREATED));
     assertTrue(entity.getHeaders().getLocation().toString().contains("http://localhost:"+ this.port+"/such_"));
-    assertThat(entity.getHeaders().getContentType(), is(new MediaType("application", "json", Charset.forName("UTF-8"))));
+    assertThat(entity.getHeaders().getContentType(),
+            is(new MediaType("application", "json", Charset.forName("UTF-8"))));
     ReadContext rc = JsonPath.parse(entity.getBody());
     assertTrue(rc.read("$.hash").toString().contains("such_"));
     assertTrue(rc.read("$.uri").toString().contains("http://localhost:"+ this.port+"/such_"));
@@ -88,12 +90,15 @@ public class SystemTests {
 
   }
 
+  /**
+   * Sends a post petition to /link
+   * @param url URL to send
+   * @return What is returned after a POST message has been sent
+   */
   private ResponseEntity<String> postLink(String url) {
     MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
     parts.add("url", url);
     return restTemplate.postForEntity("/link", parts, String.class);
   }
-
-
 
 }
